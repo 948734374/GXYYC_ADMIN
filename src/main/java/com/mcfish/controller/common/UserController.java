@@ -15,6 +15,7 @@ import org.springframework.web.servlet.ModelAndView;
 import com.mcfish.controller.base.BaseController;
 import com.mcfish.controller.base.InterfaceResult;
 import com.mcfish.entity.common.User;
+import com.mcfish.entity.common.UserCoupon;
 import com.mcfish.entity.common.UserMoney;
 import com.mcfish.entity.common.UserRecord;
 import com.mcfish.service.common.IUserService;
@@ -232,4 +233,61 @@ public class UserController extends BaseController {
 		return InterfaceResult.returnTableSuccess(userMoneyList, total, pd.get("draw"));
 	}
 	
+	
+	/**
+	 * 查询订单详情
+	 * @author WangHaibo
+	 * @date 2018年4月21日 上午10:09:33 
+	 * @return
+	 * @throws Exception
+	 * @return Object
+	 */
+	@ResponseBody
+	@RequestMapping(value="/getUserOrderInfo.do")
+	public Object getUserOrderInfo() throws Exception{
+		PageData pd = this.getPageData();
+		
+		int orderId = Integer.parseInt(pd.get("id").toString());
+		UserRecord orderInfo = userServiceImpl.selectUserOrderInfoById(orderId);
+		
+		return InterfaceResult.returnSuccess(orderInfo);
+	}
+	
+	
+	/**
+	 * 用户优惠券列表数据
+	 * @author WangHaibo
+	 * @date 2018年4月23日 上午9:27:31 
+	 * @throws Exception
+	 * @return void
+	 */
+	@ResponseBody
+	@RequestMapping(value="/getUserCouponList.do")
+	public Object getUserCouponList() throws Exception{
+		PageData pd = this.getPageData();
+		
+		List<UserCoupon> uCouponList = userServiceImpl.getUserCouponList(pd);
+		Long total = uCouponList.size() == 0 ? 01 : uCouponList.get(0).getTotal();
+		
+		return InterfaceResult.returnTableSuccess(uCouponList, total, pd.get("draw"));
+	}
+	
+	
+	/**
+	 * 充值/减扣操作
+	 * @author WangHaibo
+	 * @date 2018年4月23日 上午11:03:41 
+	 * @return
+	 * @throws Exception
+	 * @return Object
+	 */
+	@ResponseBody
+	@RequestMapping(value="/updateUserAddOrReduce.do")
+	public Object updateUserAddOrReduce() throws Exception{
+		PageData pd = this.getPageData();
+		
+		userServiceImpl.updateUserAddOrReduce(pd);
+		
+		return InterfaceResult.returnSuccess(null);
+	}
 }

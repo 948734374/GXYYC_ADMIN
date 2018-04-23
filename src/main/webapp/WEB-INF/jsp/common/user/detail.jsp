@@ -187,18 +187,16 @@
 								<div class="box box-default no-border">
 									<div class="box-header" style="line-height: 45px;">
 										<div class="form-inline">
-							                 <div class="form-group">
 												<div class="form-group">
 													<label class="text-color-999">账户余额:</label>
-													<span id="userAccount" class="text-color-999"></span>
+													<span id="userAccount" class="text-color-red"></span>
 												</div>
-												<div class="form-group">
-													<button class="btn  btn-info" onclick="">减扣</button>
+												<div class="form-group" style="float: right; margin-right: 10px;" >
+													<button class="btn  btn-info" onclick="openAddAndReduceView(1);">充值</button>
 												</div>
-												<div class="form-group">
-													<button class="btn  btn-info" onclick="">充值</button>
+												<div class="form-group" style="float: right; margin-right: 10px;" >
+													<button class="btn  btn-info" onclick="openAddAndReduceView(2)">减扣</button>
 												</div>
-											</div>
 										</div>
 										<div class="box-body table-responsive">
 											<table id="userAccountList" class="table table-bordered table-hover">
@@ -217,6 +215,7 @@
 									</div>
 								</div>
 							</div>
+							
 							<!-- 我的优惠券-->
 							<div class="tab-pane" id="tab_4">
 								<div class="box box-default no-border">
@@ -224,13 +223,13 @@
 										<div class="form-inline">
 											<div class="form-group">
 						                      <label class="text-color-999">类型:</label>      
-						                      <select id="userCouponType" class="form-control" onchange="getCouponList();">
+						                      <select id="userCouponType" class="form-control" onchange="getUserCouponList();">
 						                        <option value="">全部</option>
 						                        <option value="0">体验券</option>
 						                        <option value="1">代金券</option>
 						                      </select>     
 						                      <label class="text-color-999">状态:</label>      
-						                      <select id="userCouponStatus" class="form-control" onchange="getCouponList();">
+						                      <select id="userCouponStatus" class="form-control" onchange="getUserCouponList();">
 						                        <option value="">全部</option>
 						                        <option value="0">未使用</option>
 						                        <option value="1">已使用</option>
@@ -329,6 +328,95 @@
 			</div>
 		</div>
 		
+		<!-- 查看详情弹窗 -->
+		<div class="modal fade" id="userOrderInfoView" tabindex="-1" role="dialog" aria-labelledby="mySmallModalLabel" aria-hidden="true">
+			<div class="modal-dialog" style="margin-top: 10%;">
+				<div class="modal-content">
+					<div class="modal-header">
+						<button type="button" class="close" data-dismiss="modal">
+							<span aria-hidden="true">×</span>
+							<span class="sr-only">Close</span>
+						</button>
+						<h4 class="modal-title text-center">订单详情</h4>
+					</div>
+					<div class="modal-body">
+						<div class="info-container" style="margin-left: 100px; min-width: 450px;">
+								<div class="item">
+									<div class="item_left">
+										<span>订单编号</span>
+									</div>
+									<div class="item_right">
+										<div id="infoOrderId"></div>
+									</div>
+								</div>
+
+								<div class="item">
+									<div class="item_left">
+										<span>订单金额</span>
+									</div>
+									<div class="item_right">
+										<div id="infoOrderMoney"></div>
+									</div>
+								</div>
+								<div class="item">
+									<div class="item_left">
+										<span>车牌号</span>
+									</div>
+									<div class="item_right">
+										<div id="infoCarNo"></div>
+									</div>
+								</div>
+								<div class="item">
+									<div class="item_left">
+										<span>用途</span>
+									</div>
+									<div class="item_right">
+										<div id="infoUseTo"></div>
+									</div>
+								</div>
+								<div class="item">
+									<div class="item_left">
+										<span>下单时间</span>
+									</div>
+									<div class="item_right">
+										<div id="infoCreateTime"></div>
+									</div>
+								</div>
+						</div>
+					</div>
+					
+					<div class="modal-footer" style="text-align: center;">
+						<button type="button" class="btn btn-default" data-dismiss="modal">关闭</button>
+					</div>
+				</div>
+			</div>
+		</div>
+
+		<!-- 充值、减扣弹窗 -->
+		<div class="modal fade" id="addAndReduceView" tabindex="-1" role="dialog" aria-labelledby="mySmallModalLabel" aria-hidden="true">
+			<div class="modal-dialog" style="margin-top: 10%;margin-left: 38%;">
+				<div class="modal-content" style="width: 400px;">
+					<div class="modal-header">
+						<button type="button" class="close" data-dismiss="modal">
+							<span aria-hidden="true">×</span>
+							<span class="sr-only">Close</span>
+						</button>
+						<h4 id="addAndReduceTitle" class="modal-title text-center"></h4>
+					</div>
+					<div class="modal-body">
+						<div class="addInputs" style="width: 100%;">
+							<div id="addAndReduceInput" class="inputs">
+							</div>
+						</div>
+					</div>
+					
+					<div class="modal-footer" style="text-align: center;">
+						<button type="button" class="btn btn-default" data-dismiss="modal">取消</button>
+						<button type="button" id="saveAddAndReduceInfo" class="btn btn-info">保存</button> 
+					</div>
+				</div>
+			</div>
+		</div>
 
 		<script src="../dist/jquery/jquery.min.js"></script>
 		<script src="../dist/bootstrap/bootstrap.min.js"></script>

@@ -355,13 +355,97 @@ function getUserMoneyList(){
 						"render" : function(data, type, full, meta) {
 								var str = "";
 								if(full.order_type == 2){
-									str += "<span class='tab_text_blue pointer' onclick=changeUserPayStatus(" + data +");>查看详情</span>&nbsp;&nbsp;";
+									str += "<span class='tab_text_blue pointer' onclick=selectUserOrderInfo(" + data +");>查看详情</span>&nbsp;&nbsp;";
 								}
 	                        	return str;
 							}
-					},
+					}
 				]
-	table = $api.getDataTable('#userAccountList',ajaxParams, colData);
+	table = $api.getDataTable('#userAccountList',ajaxParams, colData,function(res){
+		//账户余额
+		$('#userAccount').html($tools.toMoney(res.data[0].money));
+	});
+}
+
+/**
+ * 查询订单详情
+ */
+function selectUserOrderInfo(id){
+	
+	$api.asyncRequest("shareUserController/getUserOrderInfo.do","POST",{id:id}).then(function(res){
+		var data = res.data;
+		
+		$("#infoOrderId").html(data.order_no);
+		$("#infoOrderMoney").html($tools.toMoney(data.amount_disc));
+		$("#infoCarNo").html(data.dno);
+		$("#infoUseTo").html("消费");
+		$("#infoCreateTime").html($tools.getMyDate(data.create_time,1));
+		
+		$("#userOrderInfoView").modal("toggle");
+	});
+}
+
+
+/**
+ * 充值、减扣弹窗
+ */
+function openAddAndReduceView(type){
+	//清空
+	$('#addAndReduceInput').children().remove();
+	
+	var str = "";
+	var input = "";
+	if(type == 1){
+		//充值
+		str = "充值";
+		input= "<input id='addAndReduceInputVal' type='number' class='form-control' style='width: 80%;' placeholder='请输入充值金额'></input>";
+		//给确认按钮添加点击事件
+		$('#saveAddAndReduceInfo').attr('onclick','saveAddAndReduceInfo(1)');
+	}
+	if(type == 2){
+		//减扣
+		str = "减扣";
+		input= "<input id='addAndReduceInputVal' type='number' class='form-control' style='width: 80%;' placeholder='请输入减扣金额'></input>";
+		//给确认按钮添加点击事件
+		$('#saveAddAndReduceInfo').attr('onclick','saveAddAndReduceInfo(2)');
+	}
+	
+	$('#addAndReduceTitle').html(str);
+	$('#addAndReduceInput').append(input);
+	
+	$("#addAndReduceView").modal("toggle");
+}
+
+/**
+ * 保存
+ * @returns
+ */
+function saveAddAndReduceInfo(type){
+	
+	var money = $("#addAndReduceInputVal").val()
+	console.log(money);
+	
+	if(money ==''){
+		if(type == 1){
+			mizhu.toast("请输入充值金额",1000);
+		}else if(type == 2){
+			mizhu.toast("请输入减扣金额",1000);
+		}
+		
+		return false;
+	}
+	
+	var data = {
+		id			:uid,
+		type		:type,
+		money		:money
+	}
+	
+	$api.asyncRequest("shareUserController/updateUserAddOrReduce.do","POST", data).then(function(res){
+		//获取用户详细信息
+		mizhu.toast(res.resmsg,1000);
+		$("#editUserInfoView").modal("toggle");
+	});
 }
 
 /*************************************************************************************************************/
@@ -378,72 +462,53 @@ function getUserMoneyList(){
  */
 function getUserCouponList(){
 	
+	var type = $("#userCouponType").val();
+	var status = $("#userCouponStatus").val();
+	
 	var ajaxParams = {
 			api: 'shareUserController/getUserCouponList.do',
 			type: 'GET',
 			searching:true,
 			data: {
-				uid	:uid
+				uid		:uid,
+				type	:type,
+				status	:status,
 			}
 	 }
 	 var colData = [
-					{"data" : "order_no",'sClass' : "text-center col-width-120"},
-					{"data" : "create_time",'sClass' : "text-left col-width-120",
+					{"data" : "type",'sClass' : "text-center col-width-260",
 						"render": function ( data, type, full, meta ) {
-                        	return $tools.getMyDate(data,1);
-                  	     } 
+							var str = "";
+							if (data == 0){
+								str = "体验券";
+							}
+							if (data == 1){
+								str = "代金券";
+							}
+							return str;
+						}
 					},
-					{"data" : "amount_disc",'sClass' : "text-center col-width-120",
+					{"data" : "coupon_id",'sClass' : "text-center col-width-260"},
+					{"data" : "money",'sClass' : "text-center col-width-260",
 						"render": function ( data, type, full, meta ) {
                         	return $tools.toMoney(data);
                   	     } 
 					},
-					{"data" : "order_type",'sClass' : "text-center col-width-120",
+					{"data" : "comment",'sClass' : "text-center col-width-260"},
+					{"data" : "status",'sClass' : "text-center col--width-260",
 						"render" : function(data, type, full, meta) {
 							var str = "";
 							if(data == 0){
-								str +="<span>充值</span>";
+								str +="<span class='label label-warning'>未使用</span>";
 							}
 							if(data == 1){
-								str +="<span>提现</span>";
-							}
-							if(data == 2){
-								str +="<span>消费</span>";
-							}
-							if(data == 3){
-								str +="<span>收益</span>";
-							}
-							if(data == 4){
-								str +="<span>后台充值</span>";
-							}
-							if(data == 5){
-								str +="<span>后台减扣</span>";
+								str +="<span class='label label-success'>已使用</span>";
 							}
 							return str;
 						}
-					},
-					{"data" : "order_type",'sClass' : "text-center col-min-width-80",
-						"render" : function(data, type, full, meta) {
-							var str = "";
-							if(data == 4 || data == 5){
-								str +="<span>管理员</span>";
-							}else{
-								str +="<span>用户</span>";
-							}
-							return str;
-						}
-					},
-					{"data" : "id",'sClass' : "text-center col-width-oper1",
-						"render" : function(data, type, full, meta) {
-								var str = "";
-								if(full.order_type == 2){
-									str += "<span class='tab_text_blue pointer' onclick=changeUserPayStatus(" + data +");>查看详情</span>&nbsp;&nbsp;";
-								}
-	                        	return str;
-							}
 					},
 				]
-	table = $api.getDataTable('#userAccountList',ajaxParams, colData);
+	table = $api.getDataTable('#userCouponList',ajaxParams, colData);
 }
 
 /*************************************************************************************************************/

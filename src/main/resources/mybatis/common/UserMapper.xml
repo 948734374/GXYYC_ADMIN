@@ -98,11 +98,26 @@
 			<if test="sex!=null and sex!=''">
 				sex=#{sex},
 			</if>
-			<if test="status!=null and status!=''">
-				status=#{status},
+			<if test="identity!=null and identity!=''">
+				identity=#{identity},
+			</if>
+			<if test="password!=null and password!=''">
+				password=#{password},
+			</if>
+			<if test="openid_wx!=null and openid_wx!=''">
+				openid_wx=#{openid_wx},
 			</if>
 			<if test="phone!=null">
 				phone=#{phone},
+			</if>
+			<if test="money!=null and money!=''">
+				money=#{money},
+			</if>
+			<if test="comment!=null and comment!=''">
+				comment=#{comment},
+			</if>
+			<if test="status!=null and status!=''">
+				status=#{status},
 			</if>
 		</trim>
 		<where>
@@ -243,7 +258,7 @@
 	</update>
 	
 	
-	<!-- 退款给用户 -->
+	<!-- 更新消费记录表里的用户余额 -->
 	<update id="updateUserOrderMoney" parameterType="pd">
 		update
 			tb_user_money
@@ -276,4 +291,65 @@
 		    limit #{start},#{length}
 		</if>
 	</select>
+	
+	
+	<!-- 获取用户优惠券列表数据 -->
+	<select id="getUserCouponList" parameterType="pd" resultType="com.mcfish.entity.common.UserCoupon">
+		select 
+			tuc.*,
+			tc.comment as comment,
+			(
+				select 
+					count(uc.id)
+				from 
+					tb_user_coupon uc
+				LEFT JOIN 
+					tb_coupon c
+				ON 
+					uc.coupon_id = c.id
+				<where>
+					<if test="uid != null and uid != ''">
+						and uc.user_id = #{uid}
+					</if>
+					<if test="status != null and status != ''">
+						and uc.`status` = #{status}
+					</if>
+					<if test="type != null and type != ''">
+						and uc.type = #{type}
+					</if>
+					<if test="keyword != null and keyword != ''">
+						and (uc.coupon_id like CONCAT('%',#{keyword},'%'))
+					</if>
+				</where>
+				order by tuc.create_time desc
+			) as total
+		FROM
+			tb_user_coupon tuc
+		LEFT JOIN 
+			tb_coupon tc 
+		ON 
+			tuc.coupon_id = tc.id
+		<where>
+			<if test="uid != null and uid != ''">
+				and tuc.user_id = #{uid}
+			</if>
+			<if test="status != null and status != ''">
+				and tuc.`status` = #{status}
+			</if>
+			<if test="type != null and type != ''">
+				and tuc.type = #{type}
+			</if>
+			<if test="keyword != null and keyword != ''">
+				and (tuc.coupon_id like CONCAT('%',#{keyword},'%'))
+			</if>
+		</where>
+		order by tuc.create_time desc
+		<if test="length != null  and length!='' and length != -1">
+		    limit #{start},#{length}
+		</if>
+	</select>
+	
+	
+	<!--  -->
+	
 </mapper>

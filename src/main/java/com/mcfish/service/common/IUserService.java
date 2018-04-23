@@ -3,6 +3,7 @@ package com.mcfish.service.common;
 import java.util.List;
 
 import com.mcfish.entity.common.User;
+import com.mcfish.entity.common.UserCoupon;
 import com.mcfish.entity.common.UserMoney;
 import com.mcfish.entity.common.UserRecord;
 import com.mcfish.util.PageData;
@@ -107,7 +108,7 @@ public interface IUserService {
 
 
 	/**
-	 * 退款给用户
+	 * 更新消费记录表里的用户余额
 	 * @author WangHaibo
 	 * @date 2018年4月20日 下午5:27:42 
 	 * @throws Exception
@@ -125,5 +126,26 @@ public interface IUserService {
 	 * @return List<UserMoney>
 	 */
 	List<UserMoney> getUserMoneyList(PageData pd) throws Exception;
+
+
+	/**
+	 * 用户优惠券列表数据
+	 * @author WangHaibo
+	 * @date 2018年4月23日 上午9:28:23 
+	 * @param pd
+	 * @return
+	 * @return List<UserCoupon>
+	 */
+	List<UserCoupon> getUserCouponList(PageData pd) throws Exception;
+
+
+	/**
+	 * 充值/减扣操作
+	 * @author WangHaibo
+	 * @date 2018年4月23日 上午11:04:13 
+	 * @param pd
+	 * @return void
+	 */
+	void updateUserAddOrReduce(PageData pd) throws Exception;
 	
 }

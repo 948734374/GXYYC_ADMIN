@@ -1,8 +1,8 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
         "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
-<mapper namespace="FileMapper">
-    <resultMap type="com.mcfish.entity.file.File" id="Files">  
+<mapper namespace="DocumentMapper">
+    <!-- <resultMap type="com.mcfish.entity.common.Document" id="Documents">  
         <id column="id" property="id"/>  
         <result column="cate_id" property="cateId"/>  
         <result column="name" property="name"/>  
@@ -10,15 +10,20 @@
         <result column="description" property="description"/>  
         <result column="order_no" property="orderNo"/>  
         <result column="update_time" property="updateTime"/>  
-    </resultMap>  
+    </resultMap>   -->
 
 <!-- 查寻所有文件 -->
-<select id="getFileList" resultMap="Files">
-     select type,title,create_time from tb_admin_rule 
+<select id="getDocumentList" parameterType="pd" resultType="com.mcfish.entity.common.Document">
+     select a.*, (select count(id) from tb_admin_rule as b ) as total
+     from tb_admin_rule as a 
      <where>
          <if test="type!=null and type!='' ">
-             type=#{type}
+             a.type=#{type}
          </if>
      </where>
+     order by create_time desc 
+		<if test="length != null  and length!='' and length != -1">
+		    limit #{start},#{length}
+		</if>
 </select>
 </mapper>
