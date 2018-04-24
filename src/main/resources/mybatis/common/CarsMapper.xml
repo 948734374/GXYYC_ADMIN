@@ -1,0 +1,152 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" 
+	"http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="carsMapper" >
+	
+	<!-- 获取所有车辆管理列表 -->
+	<select id="getAllCarsList" parameterType="pd" resultType="com.mcfish.entity.common.Cars">
+		select 
+			td.*,
+			tdp.name as price_name,
+			(
+				select 
+					count(d.id)
+				from
+					tb_dev d
+				left join
+					tb_dev_price as dp
+				on
+					d.price_id = dp.id
+				<where>
+					<if test="online != null and online != ''">
+						and d.online = #{online}
+					</if>
+					<if test="keyword != null and keyword != ''">
+						and (d.id like CONCAT('%',#{keyword},'%') 
+								or d.dno like CONCAT('%',#{keyword},'%')
+							)
+					</if>
+				</where>
+				order by d.create_time desc
+			) as total
+		from
+			tb_dev td
+		left join
+			tb_dev_price tdp
+		on
+			td.price_id = tdp.id
+		<where>
+			<if test="online != null and online != ''">
+				and td.online = #{online}
+			</if>
+			<if test="keyword != null and keyword != ''">
+				and (td.id like CONCAT('%',#{keyword},'%') 
+						or td.dno like CONCAT('%',#{keyword},'%')
+					)
+			</if>
+		</where>
+		order by
+			td.create_time desc
+		<if test="length != null  and length!='' and length != -1">
+		    limit #{start},#{length}
+		</if>	
+		
+	</select>
+	
+	
+	<!-- 获取车辆管理-投放申请列表数据  -->
+	<select id="getAllCarsApplyList" parameterType="pd" resultType="com.mcfish.entity.common.CarsApply">
+		select
+			*,
+			CONCAT(prov, city, zone, address) AS adds,
+			(
+				select 
+					count(id)
+				from
+					tb_dev_apply
+				order by
+					create_time desc	
+			)as total
+		from
+			tb_dev_apply
+		order by
+			create_time desc
+		<if test="length != null  and length!='' and length != -1">
+		    limit #{start},#{length}
+		</if>	
+	</select>
+	
+	
+	<!-- 更新车辆管理-车辆列表 -->
+	<update id="updateCars" parameterType="pd">
+		update 
+			tb_dev 
+		<trim prefix="set" suffixOverrides="," >
+			<if test="status != null and status != ''">
+				status = #{status},
+			</if>
+			<if test="online != null and online != ''">
+				online = #{online},
+			</if>
+		</trim>
+		where 
+			id = #{id}
+	</update>
+	
+	
+	<!-- 获取车辆管理-投放申请列表数据 -->
+	<update id="updateCarsApply"  parameterType="pd">
+		update 
+			tb_dev_apply 
+		<trim prefix="set" suffixOverrides="," >
+			<if test="name != null and name != ''">
+				name = #{name},
+			</if>
+			<if test="type != null and type != ''">
+				type = #{type},
+			</if>
+			<if test="phone != null and phone != ''">
+				phone = #{phone},
+			</if>
+			<if test="count != null and count != ''">
+				count = #{count},
+			</if>
+			<if test="comment != null and comment != ''">
+				comment = #{comment},
+			</if>
+			<if test="installer != null and installer != ''">
+				installer = #{installer},
+			</if>
+			<if test="status != null and status != ''">
+				status = #{status},
+			</if>
+		</trim>
+		where 
+			id = #{id}
+	</update>
+	
+	
+	<!-- 导出投放申请列表数据 -->
+	<select id="getCarsListExport" parameterType="pd" resultType="Map">
+		select 
+			*,
+			CONCAT(prov, city, zone, address) AS address
+		from
+			tb_dev_apply
+		order by
+			create_time desc
+		<if test="length != null  and length!='' and length != -1">
+		    limit #{start},#{length}
+		</if>
+	</select> 
+	
+	
+	<!--  -->
+	<select id="getCarsCount" parameterType="pd" resultType="int">
+		select 
+			count(id)
+		from 
+			tb_dev_apply
+	</select>
+	
+</mapper>

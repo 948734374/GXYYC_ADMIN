@@ -4,62 +4,57 @@ import java.io.Serializable;
 import java.util.Date;
 
 /**
- * 代理商实体类
+ * 商家实体类
  * @author WangHaibo
- * @date 2018年4月24日 下午4:01:25
+ * @date 2018年4月24日 下午4:18:19
  * @version 1.0
  */
-public class Agent implements Serializable {
+public class Shop implements Serializable {
 
 	/**
 	 * 序列化
 	 */
-	private static final long serialVersionUID = 3515086176733848344L;
+	private static final long serialVersionUID = 4046520072943548917L;
 	
 	private Integer id;
-	private Integer parent_id;		//父级ID
+	private Integer agent_id;		//所属代理商ID
 	private String openid_wx;		//绑定的微信OpenID
-	private int level;				//理代级别: 1-一级 2-二级 3-三级
 	private String head;			
 	private String name;			//代理商名称
 	private String phone;			//手机号
 	private String password;		//密码
 	private int money;				//余额
 	private int reward;				//励奖的金额（money中已包含此部分）
-	private int totalMoney;			//累计收益
+	private int total;			//累计收益
 	private int proportion;			//分成比例 1-100
 	private String prov;			//省
 	private String city;			//市
 	private String zone;			//区
-	private String address;			//详细地址
-	private String contract;		//同合编号
+	private String address;			//地址
+	private String adds;			//
+	private Long lng;				//经度
+	private Long lat;				//纬度
 	private String comment;			//备注
 	private int status;				//态状：1-冻结 0-正常
-	private Date create_time;		//驻入时间
-	private Integer total;
+	private Date create_time;
+	private Long totalSize;
 	public Integer getId() {
 		return id;
 	}
 	public void setId(Integer id) {
 		this.id = id;
 	}
-	public Integer getParent_id() {
-		return parent_id;
+	public Integer getAgent_id() {
+		return agent_id;
 	}
-	public void setParent_id(Integer parent_id) {
-		this.parent_id = parent_id;
+	public void setAgent_id(Integer agent_id) {
+		this.agent_id = agent_id;
 	}
 	public String getOpenid_wx() {
 		return openid_wx;
 	}
 	public void setOpenid_wx(String openid_wx) {
 		this.openid_wx = openid_wx;
-	}
-	public int getLevel() {
-		return level;
-	}
-	public void setLevel(int level) {
-		this.level = level;
 	}
 	public String getHead() {
 		return head;
@@ -97,12 +92,7 @@ public class Agent implements Serializable {
 	public void setReward(int reward) {
 		this.reward = reward;
 	}
-	public int getTotalMoney() {
-		return totalMoney;
-	}
-	public void setTotalMoney(int totalMoney) {
-		this.totalMoney = totalMoney;
-	}
+	
 	public int getProportion() {
 		return proportion;
 	}
@@ -133,11 +123,17 @@ public class Agent implements Serializable {
 	public void setAddress(String address) {
 		this.address = address;
 	}
-	public String getContract() {
-		return contract;
+	public Long getLng() {
+		return lng;
 	}
-	public void setContract(String contract) {
-		this.contract = contract;
+	public void setLng(Long lng) {
+		this.lng = lng;
+	}
+	public Long getLat() {
+		return lat;
+	}
+	public void setLat(Long lat) {
+		this.lat = lat;
 	}
 	public String getComment() {
 		return comment;
@@ -157,23 +153,34 @@ public class Agent implements Serializable {
 	public void setCreate_time(Date create_time) {
 		this.create_time = create_time;
 	}
-	public Integer getTotal() {
-		return total;
-	}
-	public void setTotal(Integer total) {
-		this.total = total;
-	}
 	public static long getSerialversionuid() {
 		return serialVersionUID;
 	}
+	public String getAdds() {
+		return adds;
+	}
+	public void setAdds(String adds) {
+		this.adds = adds;
+	}
+	public int getTotal() {
+		return total;
+	}
+	public void setTotal(int total) {
+		this.total = total;
+	}
+	public Long getTotalSize() {
+		return totalSize;
+	}
+	public void setTotalSize(Long totalSize) {
+		this.totalSize = totalSize;
+	}
 	@Override
 	public String toString() {
-		return "Agent [id=" + id + ", parent_id=" + parent_id + ", openid_wx=" + openid_wx + ", level=" + level
-				+ ", head=" + head + ", name=" + name + ", phone=" + phone + ", password=" + password + ", money="
-				+ money + ", reward=" + reward + ", totalMoney=" + totalMoney + ", proportion=" + proportion + ", prov="
-				+ prov + ", city=" + city + ", zone=" + zone + ", address=" + address + ", contract=" + contract
-				+ ", comment=" + comment + ", status=" + status + ", create_time=" + create_time + ", total=" + total
-				+ "]";
+		return "Shop [id=" + id + ", agent_id=" + agent_id + ", openid_wx=" + openid_wx + ", head=" + head + ", name="
+				+ name + ", phone=" + phone + ", password=" + password + ", money=" + money + ", reward=" + reward
+				+ ", total=" + total + ", proportion=" + proportion + ", prov=" + prov + ", city=" + city + ", zone="
+				+ zone + ", address=" + address + ", adds=" + adds + ", lng=" + lng + ", lat=" + lat + ", comment="
+				+ comment + ", status=" + status + ", create_time=" + create_time + ", totalSize=" + totalSize + "]";
 	}
 	
 }

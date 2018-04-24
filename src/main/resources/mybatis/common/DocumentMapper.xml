@@ -26,4 +26,36 @@
 		    limit #{start},#{length}
 		</if>
 </select>
+
+<!-- 新增文件 -->
+<insert id="addDocument">
+	insert into tb_admin_rule
+		(admin_id,type,title,creator,content) 
+	values
+		(#{name},#{type},#{title},#{creator},#{content})
+</insert>
+
+<!-- 根据id查找文件 -->
+<select id="getDocById" parameterType="int" resultType="com.mcfish.entity.common.Document">
+		select
+			* 
+		from 
+			tb_system_config
+		where
+			id = #{id}
+</select>
+
+<!-- 根据id更改关于我们信息 -->
+<update id="upDocById" parameterType="pd">
+	update tb_admin_rule 
+	<set>
+		admin_id = #{name},
+		type=#{type},
+		title=#{title}
+		creator=#{creator}
+		content=#{content}
+	</set>
+	where 
+		id =#{id}
+</update>
 </mapper>

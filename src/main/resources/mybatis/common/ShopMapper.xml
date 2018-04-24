@@ -1,0 +1,62 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" 
+	"http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="shopMapper" >
+	
+	<!-- 获取所有优惠券 -->
+	<select id="selectAllShops" parameterType="pd" resultType="com.mcfish.entity.common.Shop">
+		select 
+			*,
+			CONCAT(prov, city, zone, address) AS adds,
+			(
+				select 
+					count(id)
+				from
+					tb_shop
+				<where>
+					<if test="status != null and status != ''">
+						and status = #{status}
+					</if>
+					<if test="keyword != null and keyword != ''">
+						and (name like CONCAT('%',#{keyword},'%') 
+							or phone like CONCAT('%',#{keyword},'%')
+							)
+					</if>
+				</where>
+				order by 
+					create_time desc
+			) as totalSize
+		from
+			tb_shop
+		<where>
+			<if test="status != null and status != ''">
+				and status = #{status}
+			</if>
+			<if test="keyword != null and keyword != ''">
+				and (name like CONCAT('%',#{keyword},'%')
+					 or phone like CONCAT('%',#{keyword},'%')
+					 )
+			</if>
+		</where>
+		order by 
+			create_time desc
+		<if test="length != null  and length!='' and length != -1">
+		    limit #{start},#{length}
+		</if>	
+	</select>
+	
+	
+	<!-- 获取商家详情 -->
+	<select id="getShopInfo" parameterType="pd" resultType="com.mcfish.entity.common.Shop">
+		select
+			*
+		from
+			tb_shop
+		<where>
+			<if test="id != null and id != ''">
+				id = #{id}
+			</if>
+		</where>
+	</select>
+	
+</mapper>
