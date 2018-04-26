@@ -4,9 +4,9 @@ import java.util.List;
 
 import javax.annotation.Resource;
 import javax.servlet.http.HttpServletRequest;
+import javax.servlet.http.HttpSession;
 
 import org.springframework.stereotype.Controller;
-import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.ResponseBody;
@@ -14,6 +14,7 @@ import org.springframework.web.servlet.ModelAndView;
 
 import com.mcfish.controller.base.BaseController;
 import com.mcfish.controller.base.InterfaceResult;
+import com.mcfish.entity.common.Admin;
 import com.mcfish.entity.common.Document;
 import com.mcfish.service.common.IDocumentService;
 import com.mcfish.util.PageData;;
@@ -33,10 +34,10 @@ public class DocumentController extends BaseController{
 	private IDocumentService documentServiceImpl;
 	
 	/**
-	 * 跳转到文件柜示页面
+	 * 跳转到文件柜页面
 	 * @author ZhangYichi 
 	 * @date 2018年4月23日 下午2:27:14 
-	 * @return
+	 * @return 
 	 * @throws Exception
 	 */
 	@RequestMapping(value = "/DocumentPage.do")
@@ -57,11 +58,11 @@ public class DocumentController extends BaseController{
 	 * @return
 	 * @throws Exception
 	 */
-	@RequestMapping(value = "/toCreatDoc.do")
+	@RequestMapping(value = "/toDocbuild.do")
 	public ModelAndView toAddAboutPage() throws Exception {
 		ModelAndView mv = this.getModelAndView();
 		
-		mv.setViewName("common/document/creatdoc");
+		mv.setViewName("common/document/docbuild");
 		
 		return mv;
 	}
@@ -94,9 +95,14 @@ public class DocumentController extends BaseController{
 	 */
 	@ResponseBody
 	@RequestMapping(value = "/addDocument.do")
-	public Object addDocument() throws Exception {
+	public Object addDocument(HttpSession session) throws Exception {
 		PageData pd = this.getPageData();
+		String account = (String)session.getAttribute("account");
+		Admin admin = documentServiceImpl.getAdmin(account);
+		int roleid = admin.getRole_id();
 		
+	    pd.put("roleid", roleid);
+	
 		documentServiceImpl.addDocument(pd);
 		
 		return InterfaceResult.returnSuccess(null);
@@ -123,10 +129,31 @@ public class DocumentController extends BaseController{
 	 * @throws Exception
 	 */
 	@ResponseBody
-	@RequestMapping(value = "/upDocById.do")
-	public Object upDocById()throws Exception{
+	@RequestMapping(value = "/toUpdatedoc.do")
+	public Object updtaDocById()throws Exception{
 		PageData pd = this.getPageData();
 		
+		documentServiceImpl.updateDocById(pd);
+
 		return InterfaceResult.returnSuccess(null);
 	}
+	
+	/**
+	 * 根据id跳转到文件页面
+	 * @author ZhangYichi 
+	 * @date 2018年4月24日 下午6:12:20 
+	 * @return
+	 * @throws Exception
+	 */
+	@ResponseBody
+	@RequestMapping(value = "/toDocDetail.do")
+	public ModelAndView toDocDetail() throws Exception {
+		ModelAndView mv = this.getModelAndView();
+		PageData pd = this.getPageData();
+		
+		mv.setViewName("common/document/docbuild");
+		mv.addObject("pd", pd);
+		
+		return mv;
+	}	
 }

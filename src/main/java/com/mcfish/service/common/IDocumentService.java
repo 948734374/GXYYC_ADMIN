@@ -2,6 +2,7 @@ package com.mcfish.service.common;
 
 import java.util.List;
 
+import com.mcfish.entity.common.Admin;
 import com.mcfish.entity.common.Document;
 import com.mcfish.util.PageData;
 
@@ -39,10 +40,19 @@ public interface IDocumentService {
 	
 	/**
 	 * 根据id更改文件信息
-	 * @author ZhouXiaobing 
+	 * @author ZhangYichi  
 	 * @date 2018年4月24日 上午6:17:37 
 	 * @param pd
 	 * @throws Exception
 	 */
-	void updateSystemAbout(PageData pd) throws Exception;
+	public void updateDocById(PageData pd) throws Exception;
+	
+	/**
+	 * 根据account获得当前用户信息
+	 * @author ZhangYichi 
+	 * @date 2018年4月24日 上午10:19:20 
+	 * @param account
+	 * @throws Exception
+	 */
+	public Admin getAdmin(String account)throws Exception;
 }

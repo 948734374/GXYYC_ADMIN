@@ -2,15 +2,6 @@
 <!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
         "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
 <mapper namespace="DocumentMapper">
-    <!-- <resultMap type="com.mcfish.entity.common.Document" id="Documents">  
-        <id column="id" property="id"/>  
-        <result column="cate_id" property="cateId"/>  
-        <result column="name" property="name"/>  
-        <result column="price" property="price"/>  
-        <result column="description" property="description"/>  
-        <result column="order_no" property="orderNo"/>  
-        <result column="update_time" property="updateTime"/>  
-    </resultMap>   -->
 
 <!-- 查寻所有文件 -->
 <select id="getDocumentList" parameterType="pd" resultType="com.mcfish.entity.common.Document">
@@ -29,10 +20,12 @@
 
 <!-- 新增文件 -->
 <insert id="addDocument">
-	insert into tb_admin_rule
+	insert 
+	    into 
+	tb_admin_rule
 		(admin_id,type,title,creator,content) 
 	values
-		(#{name},#{type},#{title},#{creator},#{content})
+		(#{roleid},#{type},#{title},#{creator},#{content})
 </insert>
 
 <!-- 根据id查找文件 -->
@@ -40,19 +33,29 @@
 		select
 			* 
 		from 
-			tb_system_config
+			tb_admin_rule
 		where
 			id = #{id}
 </select>
 
-<!-- 根据id更改关于我们信息 -->
-<update id="upDocById" parameterType="pd">
-	update tb_admin_rule 
+<!-- 根据account查找当前用户 -->
+<select id="getAdmin" parameterType="string" resultType="com.mcfish.entity.common.Admin">
+		select
+			* 
+		from 
+			tb_admin
+		where
+			account = #{account}
+</select>
+
+<!-- 根据id更改文件 -->
+<update id="updataDocById" parameterType="pd">
+	update 
+	    tb_admin_rule 
 	<set>
-		admin_id = #{name},
 		type=#{type},
-		title=#{title}
-		creator=#{creator}
+		title=#{title},
+		creator=#{creator},
 		content=#{content}
 	</set>
 	where 

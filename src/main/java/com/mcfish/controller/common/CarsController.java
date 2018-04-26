@@ -188,4 +188,22 @@ public class CarsController extends BaseController {
 	}
 	
 	
+	/**
+	 * 更改当前车辆所属商家
+	 * @author WangHaibo
+	 * @date 2018年4月25日 上午9:11:14 
+	 * @return
+	 * @throws Exception
+	 * @return Object
+	 */
+	@ResponseBody
+	@RequestMapping(value="/updateCarsShop.do")
+	public Object updateCarsShop()throws Exception{
+		PageData pd = this.getPageData();
+		
+		carsServiceImpl.updateCarsShop(pd);
+		
+		return InterfaceResult.returnSuccess(null);
+	}
+	
 }

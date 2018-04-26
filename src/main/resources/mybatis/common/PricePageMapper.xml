@@ -1,0 +1,65 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+        "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="PricePageMapper">
+
+<!-- 查寻所有套餐 -->
+<select id="getPricePageList" parameterType="pd" resultType="com.mcfish.entity.common.PricePage">
+     select a.*,
+        (select count(id) from tb_dev_price) as total
+     from 
+        tb_dev_price as a 
+     order by 
+        create_time desc 
+	<if test="length != null  and length!='' and length != -1">
+		limit #{start},#{length}
+	</if>
+</select>
+
+<!-- 根据id查寻套餐 -->
+<select id="getPricePageById" parameterType="int" resultType="com.mcfish.entity.common.PricePage">
+     select 
+         * 
+     from 
+         tb_dev_price
+     where
+         id=#{id}
+</select>
+
+<!-- 根据id编辑套餐 -->
+<update id="updataPricePage" parameterType="pd">
+     update 
+         tb_dev_price
+     <set>
+         name=#{name},
+         price1=#{price1},
+         price2=#{price2},
+         price3=#{price3},
+         price4=#{price4},
+         price5=#{price5},
+         price6=#{price6},
+         comment=#{comment}
+     </set>
+     where
+         id =#{id}    
+</update>
+
+<!-- 新增套餐 -->
+<insert id="addPricePage" parameterType="pd">
+     insert 
+	    into 
+	 tb_dev_price
+		(name,price1,price2,price3,price4,price5,price6,comment) 
+	 values
+		(#{name},#{price1},#{price2},#{price3},#{price4},#{price5},#{price6},#{comment})
+</insert>
+
+<!-- 根据id删除套餐 -->
+<delete id="deletePricePage" parameterType="int">
+		delete 
+		from 
+		  tb_dev_price 
+		where 
+		  id = #{id}
+</delete>
+</mapper>

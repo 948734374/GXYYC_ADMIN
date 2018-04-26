@@ -2,7 +2,7 @@ package com.mcfish.entity.common;
 
 import java.sql.Timestamp;
 
-public class PracePage {
+public class PricePage {
 
 	private int id;                  //id
 	private String name;             //价格策略的名称
@@ -14,6 +14,14 @@ public class PracePage {
 	private int price6;              //6次的价格
 	private String comment;          //备注信息
 	private Timestamp create_time;   //添加时间
+	
+	public int getTotal() {
+		return total;
+	}
+	public void setTotal(int total) {
+		this.total = total;
+	}
+	private int total;               //统计数量
 	public int getId() {
 		return id;
 	}

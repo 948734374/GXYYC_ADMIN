@@ -88,6 +88,9 @@
 			<if test="online != null and online != ''">
 				online = #{online},
 			</if>
+			<if test="shop_id != null and shop_id != ''">
+				shop_id = #{shop_id},
+			</if>
 		</trim>
 		where 
 			id = #{id}

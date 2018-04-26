@@ -173,7 +173,7 @@ function saveSelectShop(carId){
 	$api.asyncRequest("shareShopController/getShopInfo.do","POST",{id:shop_id}).then(function(res){
 		$("#shopId").val(res.data.name);
 		
-		$("#saveShopForCar").attr("onclick","saveShopInfo(" + carId + shop_id + ")")
+		$("#saveShopForCar").attr("onclick","saveShopInfo(" + carId + "," + shop_id + ")")
 		
 		$("#shopView").modal("toggle");
 	});
@@ -185,8 +185,20 @@ function saveSelectShop(carId){
  * @returns
  */
 function saveShopInfo(carId,shop_id){
-	//TODO
-	alert(carId+shop_id);
+	
+	if(carId == null || carId == ''){
+		mizhu.toast("未获取到当前车辆ID，请重新选择车辆！",1000);
+		return false;
+	}
+	if(shop_id == null || shop_id == ''){
+		mizhu.toast("未获取到商家，请重新选择商家！",1000);
+		return false;
+	}
+	
+	$api.asyncRequest("shareCarsController/updateCarsShop.do","POST",{id:carId,shop_id:shop_id}).then(function(res){
+		mizhu.toast(res.resmsg,1000);
+		$("#moveCarsView").modal("toggle");
+	});
 	
 }
 /*************************************************************************************************************/

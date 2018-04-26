@@ -42,13 +42,28 @@ function getDocumentList(){
 					},
 					{"data" : "id",'sClass' : "text-center col-width-oper1",
 						"render" : function(data, type, full, meta) {
-							var str = "<span class='tab_text_blue pointer' onclick=editDocument(" + data +");>编辑</span>&nbsp;&nbsp;"
-							return str += "<span class='tab_text_blue pointer' onclick=openMessage(" + data +");>详情</span>";
+							var str="";
+							//type为0时代表详情
+							str += "<a href='"+ $tools.getBasicUrl() + "shareDocumentController/toDocDetail.do?id=" + full.id +"&type=0" +  "' target='menuFrame' class='tab_text_blue pointer'>详情</a>&nbsp;&nbsp;";
+							str += "<a href='"+ $tools.getBasicUrl() + "shareDocumentController/toDocDetail.do?id=" + full.id +"' target='menuFrame' class='tab_text_blue pointer'>编辑</a>&nbsp;&nbsp;";
+							return str;
+							
 							}
 					},
 				]
 	table = $api.getDataTable('#documentList',ajaxParams, colData);
 }
+	
+
+	//编辑文件
+    function toUpdatedoc(id){
+    	var href = $tools.getBasicUrl() + "shareDocumentController/toDocDetail.do?id=" + full.id+"&type=0";
+    }
+
+	//打开新增页面
+	function openAddDocument(){
+		window.location.href = $tools.getBasicUrl() + "shareDocumentController/toDocbuild.do";
+	}
 	
 	/**
 	 * 表格搜索
@@ -58,13 +73,5 @@ function getDocumentList(){
 			var value = $(obj).val();
 			table.search(value).draw();
 		}
-
 	}
-
-	//打开新增页面
-	function openAddDocument(){
-		window.location.href = $tools.getBasicUrl() + "shareDocumentController/toCreatDoc.do";
-	}
-
-
 

@@ -41,7 +41,7 @@
 								
 									<div id="bulit-update" class="new-bulit-item">
 										<p class="bulit-small" >修改人名称</p>
-										<input id="bulit-name" type="text" class="form-control">
+										<input id="updata-name" type="text" class="form-control">
 									</div>
 									
 									<div class="new-bulit-item">
@@ -93,7 +93,7 @@
 		<script src="../dist/umeditor/lang/zh-cn/zh-cn.js"></script>
 		<script src="../dist/jquery/ui.js"></script>
 		<script src="../mcfish/js/mcfish.js"></script>
-		<script src="../mcfish/js/document/creatdoc.js"></script>
+		<script src="../mcfish/js/document/docbuild.js"></script>
 	</body>
 
 </html>

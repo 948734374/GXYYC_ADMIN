@@ -160,4 +160,12 @@ public class CarsServiceImpl implements ICarsService {
 	}
 
 
+	//更改当前车辆所属商家
+	@Override
+	public void updateCarsShop(PageData pd) throws Exception {
+
+		dao.update("carsMapper.updateCars", pd);
+	}
+
+
 }

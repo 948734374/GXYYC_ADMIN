@@ -2,6 +2,7 @@ const $tools= mcfish.Tools;
 const $api	= mcfish.API;
 const myurl = $tools.parseURL(window.location.href);
 const id = parseInt(myurl.params['id']);
+const type = parseInt(myurl.params['type']);
 const um = UM.getEditor('editor');
 
 $(function() {
@@ -9,29 +10,60 @@ $(function() {
 	um.setContent("")
 	
 	if(id){
-		$api.asyncRequest("shareDocumentController/getDocById.do","GET",{id:id}).then(function(res){
+		clearDocInfoView();
+		$api.asyncRequest("shareDocumentController/getDocById.do","GET",{id:id,type:type}).then(function(res){
 			var data = res.data
 			if(data){
-				$("#bulit-crate").hide();
-				$('.box-title').text('编辑文件');
-				$("#publish").attr("onclick", "saveItem("+ data.id +")");
-				$("#publish").html("保存");
-				
-				//回显数据
-				$("#bulit-name").val(data.creator);
-				$("#built-title").val(data.title);
-				$("#documentStatus").val(data.type);
-				
-				um.setContent(data.content || "");
+				if(type==0){
+					$("#bulit-crate").hide();
+					$('.box-title').text('文件详情');
+					$("#publish").html("保存").hide();;
+					$("#documentStatus").attr("disabled","disabled");
+					
+					//回显数据
+					$("#updata-name").val(data.creator);
+					$("#built-title").val(data.title);
+					$("#documentStatus").val(data.type);
+					
+					um.setContent(data.content || "");
+				}else{
+					$("#documentStatus").removeAttr("disabled");
+					$("#bulit-crate").hide();
+					$('.box-title').text('编辑文件');
+					$("#publish").attr("onclick", "saveItem("+ data.id +")");
+					
+					
+					//回显数据
+					$("#updata-name").val(data.creator);
+					$("#built-title").val(data.title);
+					$("#documentStatus").val(data.type);
+					
+					um.setContent(data.content || "");
+					
+				}
 			}
 		});
 	}else{
+		$("#documentStatus").removeAttr("disabled");
+		$("#bulit-crate").hide();
 		$("#bulit-update").hide();
 		$("#publish").attr("onclick", "saveItem(null)");
 		$("#publish").html("发布");
 		$('.box-title').text('新建文件')
 	}
 })
+
+/**
+ * 清除回显数据
+ */
+function clearDocInfoView(){
+
+	$("#bulit-name").val("");
+	$("#built-title").val("");
+	$("#documentStatus").val("");
+	
+	um.setContent("");
+}
 
 
 /**
@@ -40,20 +72,16 @@ $(function() {
  */
 function saveItem(id) {
 	
-	var name = $("#bulit-name").val();
 	var title = $("#built-title").val();
 	var type = $("#documentStatus").val();
 	var content = um.getContent();
+    var creator =$("#updata-name").val();
 
-	if(name == null || name == "") {
-		mizhu.toast("请填写名字", 1000);
-		return false;
-	}
 	if(title == null || title == "") {
 		mizhu.toast("请填写标题", 1000);
 		return false;
 	}
-	if(type == null || title == "") {
+	if(type == null || type == "") {
 		mizhu.toast("请选择类型", 1000);
 		return false;
 	}
@@ -63,7 +91,7 @@ function saveItem(id) {
 	}
 
 	var data = {
-		id	: name,
+		creator : creator,
 		title	: title,
 		type    : type,
 		content	: content
@@ -73,14 +101,13 @@ function saveItem(id) {
 	var info = "发布成功";
 	if(id){
 		data.id = id;
-		url = "shareDocumentController/.do";
+		url = "shareDocumentController/toUpdatedoc.do";
 		info = "保存成功"
 	}
 
 	$api.asyncRequest(url, "POST", data).then(function(res) {
 		parent.childToast(info,3000);
 		window.history.back();
-		//window.location.href = $tools.getBasicUrl() + "shareSystemController/SystemPage.do#tab_4";
 	});
 }
 

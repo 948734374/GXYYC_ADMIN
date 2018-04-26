@@ -70,5 +70,16 @@ public interface ICarsService {
 	 * @return HSSFWorkbook
 	 */
 	HSSFWorkbook getCarsListExport(PageData pd) throws Exception;
+
+
+	/**
+	 * 更改当前车辆所属商家
+	 * @author WangHaibo
+	 * @date 2018年4月25日 上午9:12:04 
+	 * @param pd
+	 * @throws Exception
+	 * @return void
+	 */
+	void updateCarsShop(PageData pd) throws Exception;
 	
 }
