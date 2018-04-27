@@ -2,7 +2,6 @@ package com.mcfish.service.common;
 
 import java.util.List;
 
-import com.mcfish.entity.common.Coupon;
 import com.mcfish.entity.common.Shop;
 import com.mcfish.util.PageData;
 

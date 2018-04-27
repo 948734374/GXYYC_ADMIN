@@ -15,7 +15,6 @@ import org.springframework.stereotype.Service;
 import com.mcfish.dao.DaoSupport;
 import com.mcfish.entity.common.Cars;
 import com.mcfish.entity.common.CarsApply;
-import com.mcfish.entity.common.Shop;
 import com.mcfish.service.common.ICarsService;
 import com.mcfish.util.PageData;
 

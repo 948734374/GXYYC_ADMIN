@@ -1,15 +1,16 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" 
-	"http://mybatis.org/dtd/mybatis-3-mapper.dtd">
-<mapper namespace="repertoryMapper" >
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+        "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="repertoryMapper">
 
 
-	<!-- 获取车辆库存  -->
-	<select id="getRepertoryList" parameterType="pd" resultType="com.mcfish.entity.common.Cars">
+	<!-- 获取车辆库存 -->
+	<select id="getRepertoryList" parameterType="pd"
+		resultType="com.mcfish.entity.common.Cars">
 
 		select
-		*,
-		(
+			*,
+			(
 			select
 				count(*)
 			from
@@ -18,17 +19,31 @@
 				<if test="status != null and status != ''">
 					status = #{status}
 				</if>
+				<if test="keyword != null and keyword != ''">
+					and(dno LIKE CONCAT('%',#{keyword},'%')
+					or id LIKE
+					CONCAT('%',#{keyword},'%')
+					)
+				</if>
+				<if test="startTime != null and startTime != ''">
+					and date_format(create_time,'%Y-%m-%d') &gt; #{startTime}
+				</if>
+	
+				<if test="endTime != null and endTime != ''">
+					and date_format(create_time,'%Y-%m-%d') &lt; #{endTime}
+				</if>
 			</where>
-		) as total
+			) as total
 		from
-		tb_dev
+			tb_dev
 		<where>
 			<if test="status != null and status != ''">
 				status = #{status}
 			</if>
-			<if test="selectStr != null and selectStr != ''">
-				and(dno LIKE CONCAT('%',#{selectStr},'%')
-					or shop_id LIKE CONCAT('%',#{selectStr},'%')
+			<if test="keyword != null and keyword != ''">
+				and(dno LIKE CONCAT('%',#{keyword},'%')
+				or id LIKE
+				CONCAT('%',#{keyword},'%')
 				)
 			</if>
 			<if test="startTime != null and startTime != ''">
@@ -47,30 +62,63 @@
 	</select>
 
 
-	<!-- 获取车辆投放申请  -->
-	<select id="getRepertoryApplyList" parameterType="pd" resultType="com.mcfish.entity.common.CarsApply">
+
+	<!-- 导出报废库存数据 -->
+	<select id="getExportScrapRepertory" parameterType="pd"
+		resultType="Map">
 		select
-		*,
-		(
-		select
-		count(*)
+			*
 		from
-		tb_dev_apply
+			tb_dev
 		<where>
-			<if test="status != null and status != ''">
-				status = #{status}
-			</if>
+			status = 4
 		</where>
-		) as total
+		order by create_time desc
+		<if test="length != null  and length!='' and length != -1">
+			limit #{start},#{length}
+		</if>
+	</select>
+
+
+	<!-- 获取车辆投放申请 -->
+	<select id="getRepertoryApplyList" parameterType="pd"
+		resultType="com.mcfish.entity.common.CarsApply">
+		select
+			*,
+			(
+			select
+				count(*)
+			from
+				tb_dev_apply
+			<where>
+				<if test="status != null and status != ''">
+					status = #{status}
+				</if>
+				<if test="keyword != null and keyword != ''">
+					and(id LIKE CONCAT('%',#{keyword},'%')
+					or name LIKE
+					CONCAT('%',#{keyword},'%')
+					)
+				</if>
+				<if test="startTime != null and startTime != ''">
+					and date_format(create_time,'%Y-%m-%d') &gt; #{startTime}
+				</if>
+	
+				<if test="endTime != null and endTime != ''">
+					and date_format(create_time,'%Y-%m-%d') &lt; #{endTime}
+				</if>
+			</where>
+			) as total
 		from
-		tb_dev_apply
+			tb_dev_apply
 		<where>
 			<if test="status != null and status != ''">
 				status = #{status}
 			</if>
-			<if test="selectStr != null and selectStr != ''">
-				and(id LIKE CONCAT('%',#{selectStr},'%')
-				or name LIKE CONCAT('%',#{selectStr},'%')
+			<if test="keyword != null and keyword != ''">
+				and(id LIKE CONCAT('%',#{keyword},'%')
+				or name LIKE
+				CONCAT('%',#{keyword},'%')
 				)
 			</if>
 			<if test="startTime != null and startTime != ''">
@@ -81,11 +129,178 @@
 				and date_format(create_time,'%Y-%m-%d') &lt; #{endTime}
 			</if>
 		</where>
-		order by create_time desc
+			order by create_time desc
 		<if test="length != null  and length!='' and length != -1">
 			limit #{start},#{length}
 		</if>
 
 	</select>
 
+
+	<!-- 查询库存设备byId -->
+	<select id="getRepertoryById" parameterType="java.lang.Integer"
+		resultType="com.mcfish.entity.common.Cars">
+		select
+			*
+		from
+			tb_dev
+		<where>
+		<if test="_parameter!=null and _parameter!=''">
+			id = #{_parameter}
+		</if>
+		</where>
+	</select>
+
+
+	<!-- 删除库存设备byId -->
+	<delete id="deleteRepertoryById" parameterType="int">
+		delete
+		from
+			tb_dev
+		where
+			id=#{id}
+	</delete>
+
+
+	<!-- 新增库存车辆 -->
+	<insert id="addRepertory"
+		parameterType="com.mcfish.entity.common.Cars">
+		insert into
+			tb_dev
+			(
+			dno,
+			name,
+			color,
+			image,
+			factory,
+			pwd,
+			online,
+			secure,
+			version,
+			funcs
+			)
+		values
+			(
+			#{dno},
+			#{name},
+			#{color},
+			#{image},
+			#{factory},
+			#{pwd},
+			#{online},
+			#{secure},
+			#{version},
+			#{funcs}
+			)
+	</insert>
+	
+	
+	<!-- 修改车辆库存信息 -->
+	<update id="updateRepertory"
+		parameterType="com.mcfish.entity.common.Cars">
+		update
+			tb_dev
+		<trim prefix="set" suffixOverrides=",">
+			<if test="dno!=null and dno!=''">
+				dno=#{dno},
+			</if>
+			<if test="price_id!=null and price_id!=''">
+				price_id=#{price_id},
+			</if>
+			<if test="status!=null and status!=''">
+				status=#{status},
+			</if>
+			<if test="shop_id!=null and shop_id!=''">
+				shop_id=#{shop_id},
+			</if>
+			<if test="name!=null and name!=''">
+				name=#{name},
+			</if>
+			<if test="color!=null and color!=''">
+				color=#{color},
+			</if>
+			<if test="image!=null and image!=''">
+				image=#{image},
+			</if>
+			<if test="factory!=null and factory!=''">
+				factory=#{factory},
+			</if>
+			<if test="pwd!=null and pwd!=''">
+				pwd=#{pwd},
+			</if>
+			<if test="online!=null and online!=''">
+				online=#{online},
+			</if>
+			<if test="secure!=null and secure!=''">
+				secure=#{secure},
+			</if>
+			<if test="version!=null and version!=''">
+				version=#{version},
+			</if>
+			<if test="funcs!=null and funcs!=''">
+				funcs=#{funcs},
+			</if>
+		</trim>
+		<where>
+			id=#{id}
+		</where>
+	</update>
+
+
+	<!-- 获取所有商家 -->
+	<select id="getAllShops" parameterType="pd"
+		resultType="com.mcfish.entity.common.Shop">
+		select
+			*,
+			CONCAT(prov, city, zone, address) AS adds,
+			(
+			select
+				count(id)
+			from
+				tb_shop
+			<where>
+				<if test="status != null and status != ''">
+					and status = #{status}
+				</if>
+				<if test="keyword != null and keyword != ''">
+					and (name like CONCAT('%',#{keyword},'%')
+					or phone like
+					CONCAT('%',#{keyword},'%')
+					)
+				</if>
+			</where>
+			order by create_time desc
+			) as totalSize
+		from
+			tb_shop
+		<where>
+			<if test="status != null and status != ''">
+				and status = #{status}
+			</if>
+			<if test="keyword != null and keyword != ''">
+				and (name like CONCAT('%',#{keyword},'%')
+				or phone like
+				CONCAT('%',#{keyword},'%')
+				)
+			</if>
+		</where>
+		order by create_time desc
+		<if test="length != null  and length!='' and length != -1">
+			limit #{start},#{length}
+		</if>
+	</select>
+
+
+	<!-- 获取所有价格策略 -->
+	<select id="getAllDevPrice"
+		resultType="com.mcfish.entity.common.DevPrice">
+		select 
+			*
+		from 
+			tb_dev_price 
+		order by create_time desc
+	</select>
+
+	
+	
 </mapper>

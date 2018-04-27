@@ -12,23 +12,24 @@ import org.springframework.web.bind.annotation.ResponseBody;
 import org.springframework.web.servlet.ModelAndView;
 
 import com.mcfish.controller.base.InterfaceResult;
-import com.mcfish.entity.common.PricePage;
-import com.mcfish.service.common.IPricePageService;
-import com.mcfish.service.common.impl.PricePageServiceImpl;
+import com.mcfish.entity.common.Price;
+import com.mcfish.service.common.IPriceService;
 import com.mcfish.util.PageData;
-@Controller
-@RequestMapping(value="/sharePriceController")
+
 
 /**
- * 套餐配置
+ * 套餐配置Controller
  * @author ZhangYichi
  * @date 2018年4月25日 下午5:26:17 
  * @version 1.0
  */
-public class PricePageController extends BasicController{
+@Controller
+@RequestMapping(value="/sharePriceController")
+public class PriceController extends BasicController{
 	
-	@Resource(name = "PricePageServiceImpl")
-	IPricePageService pricepageservice = new PricePageServiceImpl();
+	@Resource(name = "PriceServiceImpl")
+	private IPriceService priceservice;
+	
 	
 	/**
 	 * 跳转到套餐设置页面
@@ -42,11 +43,12 @@ public class PricePageController extends BasicController{
 		ModelAndView mv = this.getModelAndView();
 		PageData pd = this.getPageData();
 		
-		mv.setViewName("common/pricepage/pricepage");
+		mv.setViewName("common/price/price");
 		mv.addObject("pd", pd);
 		
 		return mv;
 	}
+	
 	
 	/**
 	 * 获取套餐列表
@@ -60,12 +62,13 @@ public class PricePageController extends BasicController{
 	public Object getAllPricepage (HttpServletRequest request)throws Exception{
 		PageData pd = new PageData(request);
 		
-		List<PricePage> pricepageList = pricepageservice.getPricePage(pd);
+		List<Price> pricepageList = priceservice.getPricePage(pd);
 		Long pricepageTotal = pricepageList.size() == 0 ? 0l:pricepageList.get(0).getTotal();
 		
 		return InterfaceResult.returnTableSuccess(pricepageList, pricepageTotal, pd.get("draw"));
 	}
 
+	
 	/**
 	 * 根据id获取套餐
 	 * @author ZhangYichi 
@@ -76,9 +79,10 @@ public class PricePageController extends BasicController{
 	@ResponseBody
 	@RequestMapping(value = "/getPricePage.do")
 	public Object getPricePage (@RequestParam(required = true) int id)throws Exception{
-		PricePage pricepage = pricepageservice.getPricePageById(id);
+		Price pricepage = priceservice.getPricePageById(id);
 		return InterfaceResult.returnSuccess(pricepage);
 	}
+	
 	
 	/**
 	 * 根据id编辑套餐
@@ -91,9 +95,12 @@ public class PricePageController extends BasicController{
      @RequestMapping(value ="updatePricePage.do")
      public Object updatePricePage()throws Exception{
     	 PageData pd = this.getPageData();
-    	 pricepageservice.updataPricePage(pd);
+    	 
+    	 priceservice.updataPricePage(pd);
+    	 
     	 return InterfaceResult.returnSuccess(null);
      }
+     
      
      /**
  	 * 新建套餐
@@ -106,9 +113,10 @@ public class PricePageController extends BasicController{
      @RequestMapping(value ="addPricePage.do")
      public Object addPricePage()throws Exception{
     	 PageData pd = this.getPageData();
-    	 pricepageservice.addPricePage(pd);
+    	 priceservice.addPricePage(pd);
     	 return InterfaceResult.returnSuccess(null);
      }
+     
      
      /**
   	 * 删除套餐
@@ -120,7 +128,7 @@ public class PricePageController extends BasicController{
      @ResponseBody
      @RequestMapping(value ="deletePricePage.do")
      public Object deletePricePage(@RequestParam(required = true) int id)throws Exception{
-    	 pricepageservice.deletePricePage(id);
+    	 priceservice.deletePricePage(id);
     	 return InterfaceResult.returnSuccess(null);
      }
 }

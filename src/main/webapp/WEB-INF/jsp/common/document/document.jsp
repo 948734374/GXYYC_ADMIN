@@ -15,14 +15,15 @@
 </head>
 <body class="hold-transition skin-blue sidebar-mini mc_body">
 
-        			<div class="content-wrapper" style="margin-left: 0;">
+        	<div class="content-wrapper" style="margin-left: 0;">
 				<section class="content no-padding">
 					<div class="box box-default">
+					
 						<div class="box-header" style="line-height: 45px;">
 							<h3 class="box-title text-blue box-header-text">文件柜管理</h3>
 							<div class="form-inline" style="margin: 10px 0 0 0;">
 								<div class="form-group">
-									<label class="text-color-999">状态:</label>
+									<label class="text-color-999">类型:</label>
 									<select id="documentStatus" class="form-control" onchange="getDocumentList();">
 										<option value="">全部</option>
 										<option value="0">制度</option>
@@ -34,10 +35,13 @@
 								</div>
 							</div>
 						</div>
+						
 						<div class="box-body table-responsive">
 							<table id="documentList" class="table table-bordered table-hover">
 								<thead>
 									<tr>
+									    <th>发布人名字</th>
+									    <th>发布人id</th>
 										<th>类型</th>
 										<th>标题</th>
 										<th>创建时间</th>
@@ -49,7 +53,6 @@
 					</div>
 				</section>
 			</div>
-		</div>
 
 
         <script src="../dist/jquery/jquery.min.js"></script>

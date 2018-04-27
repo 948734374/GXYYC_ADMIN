@@ -28,6 +28,12 @@
 								<div class="pull-right">
 									<button type="button" class="btn btn-success bulit-btn" id="publish">发布</button>
 								</div>
+								<div class="pull-right" style="margin-right:60;">
+								    <a href="DocumentPage.do">
+								    <button type="button" class="btn btn-success bulit-btn" id="back">返回</button>
+								    </a>
+								    &nbsp&nbsp&nbsp&nbsp&nbsp;
+								</div>
 							</div>
 						</div>
 						<div class="container-fluid">
@@ -49,7 +55,7 @@
 										<input id="built-title" type="text" class="form-control" placeholder="文件标题">
 									</div>
 								<div class="form-group">
-									<label class="text-color-999">状态:</label>
+									<label class="text-color-999">类型:</label>
 									
 									<select id="documentStatus" class="form-control" style="display: inline-block;width:auto;margin-left:39.5px">
 										<option value="">全部</option>

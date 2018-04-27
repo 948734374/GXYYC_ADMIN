@@ -2,12 +2,13 @@ const $tools = mcfish.Tools;
 const $api = mcfish.API;
 
 $(function(){
-	//获取消息列表数据
+	//获取文件列表数据
 	getDocumentList();
 })
 
+
 /**
- * 获取消息列表数据
+ * 获取文件列表数据
  */
 function getDocumentList(){
 	
@@ -22,7 +23,16 @@ function getDocumentList(){
 			}
 	 }
 	 var colData = [
-	 			
+					{"data" : "name",'sClass' : "text-center col-width-201",
+						"render": function ( data, type, full, meta ) {
+							return data;
+						} 
+					},
+					{"data" : "admin_id",'sClass' : "text-center col-width-201",
+						"render": function ( data, type, full, meta ) {
+							return data;
+					    } 
+					},
 					{"data" : "type",'sClass' : "text-center col-width-238",
 						"render": function ( data, type, full, meta ) {
                         	return data == 0 ? "制度":"通知";
@@ -30,7 +40,6 @@ function getDocumentList(){
 					},
 					{"data" : "title",'sClass' : "text-center col-width-217",
 						"render" : function(data, type, full, meta) {
-							
    		    			    data = data.replace(/\s/g,""); //去掉所有空格
 							return data;
 						}
@@ -55,23 +64,23 @@ function getDocumentList(){
 }
 	
 
-	//编辑文件
-    function toUpdatedoc(id){
-    	var href = $tools.getBasicUrl() + "shareDocumentController/toDocDetail.do?id=" + full.id+"&type=0";
-    }
 
-	//打开新增页面
-	function openAddDocument(){
-		window.location.href = $tools.getBasicUrl() + "shareDocumentController/toDocbuild.do";
+
+/**
+ * 打开新增页面
+ */
+function openAddDocument(){
+	window.location.href = $tools.getBasicUrl() + "shareDocumentController/toDocbuild.do";
+}
+
+
+/**
+ * 表格搜索
+ */
+function search(obj){
+	if(table){
+		var value = $(obj).val();
+		table.search(value).draw();
 	}
-	
-	/**
-	 * 表格搜索
-	 */
-	function search(obj){
-		if(table){
-			var value = $(obj).val();
-			table.search(value).draw();
-		}
-	}
+}
 

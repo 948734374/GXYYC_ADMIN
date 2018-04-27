@@ -15,17 +15,16 @@ import org.springframework.web.servlet.ModelAndView;
 import com.mcfish.controller.base.BaseController;
 import com.mcfish.controller.base.InterfaceResult;
 import com.mcfish.entity.common.Admin;
-import com.mcfish.entity.common.Document;
+import com.mcfish.entity.common.DocMessage;
 import com.mcfish.service.common.IDocumentService;
 import com.mcfish.util.PageData;;
 
 /**
- * 文件柜管理
+ * 文件柜管理Controller
  * @author ZhangYichi
  * @date 2018年4月23日 下午2:26:17 
  * @version 1.0
  */
-
 @Controller
 @RequestMapping(value="/shareDocumentController")
 public class DocumentController extends BaseController{
@@ -51,6 +50,7 @@ public class DocumentController extends BaseController{
 		return mv;
 	}
 	
+	
 	/**
 	 * 跳转到新建文件页面
 	 * @author ZhangYichi 
@@ -67,6 +67,7 @@ public class DocumentController extends BaseController{
 		return mv;
 	}
 	
+	
 	/**
 	 * 获取文件列表
 	 * @author ZhangYichi 
@@ -79,10 +80,10 @@ public class DocumentController extends BaseController{
 	public Object getAllDocument (HttpServletRequest request)throws Exception{
 		PageData pd = new PageData(request);
 		
-		List<Document> documentList = documentServiceImpl.getDocument(pd);
-		Long documentTotal = documentList.size() == 0 ? 0l:documentList.get(0).getTotal();
+		List<DocMessage> docMessages = documentServiceImpl.getDoc(pd);
+		Long docTotal = docMessages.size() == 0 ? 0l:docMessages.get(0).getTotal();
 		
-		return InterfaceResult.returnTableSuccess(documentList, documentTotal, pd.get("draw"));
+		return InterfaceResult.returnTableSuccess(docMessages, docTotal, pd.get("draw"));
 	}
 	
 	
@@ -99,14 +100,16 @@ public class DocumentController extends BaseController{
 		PageData pd = this.getPageData();
 		String account = (String)session.getAttribute("account");
 		Admin admin = documentServiceImpl.getAdmin(account);
-		int roleid = admin.getRole_id();
+		int id = admin.getId();
 		
-	    pd.put("roleid", roleid);
+	    pd.put("roleid", id);
 	
 		documentServiceImpl.addDocument(pd);
 		
 		return InterfaceResult.returnSuccess(null);
 	}
+	
+	
 	/**
 	 * 根据id获取文件
 	 * @author ZhangYichi 
@@ -117,9 +120,12 @@ public class DocumentController extends BaseController{
 	@ResponseBody
 	@RequestMapping(value ="/getDocById.do")
 	public Object getDocById(@RequestParam(required = true) int id)throws Exception{
-        Document doc = documentServiceImpl.getDocumentById(id);		
-		return InterfaceResult.returnSuccess(doc);
+        
+        DocMessage docmessage = documentServiceImpl.getDocmessById(id);
+        
+		return InterfaceResult.returnSuccess(docmessage);
 	}
+	
 	
 	/**
 	 * 根据id编辑文件
@@ -130,13 +136,19 @@ public class DocumentController extends BaseController{
 	 */
 	@ResponseBody
 	@RequestMapping(value = "/toUpdatedoc.do")
-	public Object updtaDocById()throws Exception{
+	public Object updtaDocById(HttpSession session)throws Exception{
 		PageData pd = this.getPageData();
+		String account = (String)session.getAttribute("account");
+		Admin admin = documentServiceImpl.getAdmin(account);
+		String name = admin.getName();
+		
+		pd.put("creator", name);
 		
 		documentServiceImpl.updateDocById(pd);
 
 		return InterfaceResult.returnSuccess(null);
 	}
+	
 	
 	/**
 	 * 根据id跳转到文件页面

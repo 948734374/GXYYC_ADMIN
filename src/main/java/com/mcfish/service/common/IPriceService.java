@@ -2,10 +2,14 @@ package com.mcfish.service.common;
 
 import java.util.List;
 
-import com.mcfish.entity.common.PricePage;
+import com.mcfish.entity.common.Price;
 import com.mcfish.util.PageData;
 
-public interface IPricePageService {
+/**
+ * 套餐设置IService
+ * @author ZhangYichi
+ */
+public interface IPriceService {
 
 	/**
 	 * 获取所有套餐
@@ -15,8 +19,9 @@ public interface IPricePageService {
 	 * @return
 	 * @throws Exception
 	 */
-	public List<PricePage> getPricePage(PageData pd) throws Exception;
+	public List<Price> getPricePage(PageData pd) throws Exception;
 		
+	
 	/**
 	 * 根据ID获取套餐
 	 * @author ZhangYichi
@@ -25,7 +30,8 @@ public interface IPricePageService {
 	 * @return
 	 * @throws Exception
 	 */
-	public PricePage getPricePageById(int id)throws Exception;
+	public Price getPricePageById(int id)throws Exception;
+	
 	
 	/**
 	 * 根据ID编辑套餐
@@ -37,6 +43,7 @@ public interface IPricePageService {
 	 */
 	public void updataPricePage(PageData pd)throws Exception;
 	
+	
 	/**
 	 * 新增套餐
 	 * @author ZhangYichi
@@ -46,6 +53,7 @@ public interface IPricePageService {
 	 * @throws Exception
 	 */
 	public void addPricePage(PageData pd)throws Exception;
+	
 	
 	/**
 	 * 删除套餐

@@ -7,48 +7,64 @@ import javax.annotation.Resource;
 import org.springframework.stereotype.Service;
 
 import com.mcfish.dao.DaoSupport;
-import com.mcfish.entity.common.PricePage;
-import com.mcfish.service.common.IPricePageService;
+import com.mcfish.entity.common.Price;
+import com.mcfish.service.common.IPriceService;
 import com.mcfish.util.PageData;
 
-@Service("PricePageServiceImpl")
-public class PricePageServiceImpl implements IPricePageService {
+/**
+ * 套餐设置service
+ * @author ZhangYichi
+ * @date 2018年4月23日 下午3:00:22 
+ * @version 1.0
+ */
+@Service("PriceServiceImpl")
+public class PriceServiceImpl implements IPriceService {
 
 	@Resource(name = "daoSupport")
 	private DaoSupport dao;
 
-	@SuppressWarnings("unchecked")
 
 	//获取所有套餐
+	@SuppressWarnings("unchecked")
 	@Override
-	public List<PricePage> getPricePage(PageData pd) throws Exception {
+	public List<Price> getPricePage(PageData pd) throws Exception {
+		
 		pd.put("start", Integer.parseInt(pd.get("start").toString()));
 		pd.put("length", Integer.parseInt(pd.get("length").toString()));
-		return (List<PricePage>) dao.findForList("PricePageMapper.getPricePageList", pd);
+		
+		return (List<Price>) dao.findForList("PriceMapper.getPricePageList", pd);
 	}
 
+	
 	//根据ID获取套餐
 	@Override
-	public PricePage getPricePageById(int id) throws Exception {
-		return (PricePage) dao.findForObject("PricePageMapper.getPricePageById", id);
+	public Price getPricePageById(int id) throws Exception {
+		
+		return (Price) dao.findForObject("PriceMapper.getPricePageById", id);
 	}
     
+	
 	//根据ID编辑套餐
 	@Override
 	public void updataPricePage(PageData pd) throws Exception {
-		dao.update("PricePageMapper.updataPricePage", pd);
+		
+		dao.update("PriceMapper.updataPricePage", pd);
 	}
 
+	
 	//新增套餐
 	@Override
 	public void addPricePage(PageData pd) throws Exception {
-		dao.save("PricePageMapper.addPricePage", pd);
+        	
+		dao.save("PriceMapper.addPricePage", pd);
 	}
 
+	
 	//根据id删除套餐
 	@Override
 	public void deletePricePage(int id) throws Exception {
-		dao.delete("PricePageMapper.deletePricePage", id);
+		
+		dao.delete("PriceMapper.deletePricePage", id);
 	}
 
 

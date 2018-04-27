@@ -9,24 +9,28 @@ $(function() {
 	
 	um.setContent("")
 	
+	//根据id是否为空判断是否新建页面
 	if(id){
 		clearDocInfoView();
 		$api.asyncRequest("shareDocumentController/getDocById.do","GET",{id:id,type:type}).then(function(res){
 			var data = res.data
 			if(data){
+				
+				//当type为0时跳转到文件详情，否则为文件编辑
 				if(type==0){
-					$("#bulit-crate").hide();
 					$('.box-title').text('文件详情');
 					$("#publish").html("保存").hide();;
 					$("#documentStatus").attr("disabled","disabled");
 					
 					//回显数据
+					$("#bulit-name").val(data.name);
 					$("#updata-name").val(data.creator);
 					$("#built-title").val(data.title);
 					$("#documentStatus").val(data.type);
 					
 					um.setContent(data.content || "");
 				}else{
+					$("#bulit-update").hide();
 					$("#documentStatus").removeAttr("disabled");
 					$("#bulit-crate").hide();
 					$('.box-title').text('编辑文件');
@@ -52,6 +56,7 @@ $(function() {
 		$('.box-title').text('新建文件')
 	}
 })
+
 
 /**
  * 清除回显数据
@@ -111,7 +116,10 @@ function saveItem(id) {
 	});
 }
 
-// 文件上传
+
+/**
+ * 文件上传
+ */
 function mcupFileFunc(obj){
 	var pid  = sessionStorage.getItem('nowProjectId') 
 	var file = $(obj)[0].files[0] // 是否有值
@@ -119,13 +127,6 @@ function mcupFileFunc(obj){
 		mizhu.toast('上传文件不能为空')
 		return
 	}
-	//文件类型判断
-	//fileType(file, ["word","doc","excel","xlsx"])
-	/*
-	if (file.type.indexOf("word")<0){  //  是否有word标签
-		console.log('请上传word文档')
-		return
-	}*/
 	var form = new FormData();    // FormData 对象
 	form.append("file", file);    // 文件对象
 	form.append("bath", '/user') 
@@ -136,6 +137,7 @@ function mcupFileFunc(obj){
 		$(obj).parent().find("b").html(furl);
 	})
 }
+
 
 /**
  * 删除当前上传的文件
@@ -163,6 +165,7 @@ function addFileTool(obj){
 				'</div>';
 	$(obj).before(str);
 }
+
 
 /**
  * 获取上传的文件的URL
@@ -206,7 +209,6 @@ function limitFileSize(file, limitSize){
     }
     return true
 }
-
 
 
 /**

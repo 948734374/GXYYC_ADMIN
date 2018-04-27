@@ -3,62 +3,118 @@
         "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
 <mapper namespace="DocumentMapper">
 
-<!-- 查寻所有文件 -->
-<select id="getDocumentList" parameterType="pd" resultType="com.mcfish.entity.common.Document">
-     select a.*, (select count(id) from tb_admin_rule as b ) as total
-     from tb_admin_rule as a 
-     <where>
-         <if test="type!=null and type!='' ">
-             a.type=#{type}
-         </if>
-     </where>
-     order by create_time desc 
+	<!-- 查寻所有文件 -->
+	<select id="getDocumentList" parameterType="pd" resultType="com.mcfish.entity.common.Document">
+	     select
+	     	a.*, 
+	     	(
+		     	select
+		     		count(id)
+		     	from 
+		     		tb_admin_rule as b 
+	     	)as total
+	     from 
+	     	tb_admin_rule as a 
+	     <where>
+	         <if test="type!=null and type!='' ">
+	             a.type=#{type}
+	         </if>
+	     </where>
+	     order by 
+	     	create_time desc 
 		<if test="length != null  and length!='' and length != -1">
 		    limit #{start},#{length}
 		</if>
-</select>
+	</select>
 
-<!-- 新增文件 -->
-<insert id="addDocument">
-	insert 
-	    into 
-	tb_admin_rule
-		(admin_id,type,title,creator,content) 
-	values
-		(#{roleid},#{type},#{title},#{creator},#{content})
-</insert>
 
-<!-- 根据id查找文件 -->
-<select id="getDocById" parameterType="int" resultType="com.mcfish.entity.common.Document">
-		select
-			* 
-		from 
-			tb_admin_rule
-		where
-			id = #{id}
-</select>
+    <!-- 查找所有文件信息 -->
+    <select id="getDocList" parameterType="pd" resultType="com.mcfish.entity.common.DocMessage">
+         select
+			ta.name,tr.*, 
+			(
+			    select
+				    count(id)
+			    from
+				    tb_admin_rule
+		     )as total
+	     from
+		    tb_admin_rule as tr 
+		    inner join tb_admin as ta on tr.admin_id = ta.id
+		 <where>
+	         <if test="type!=null and type!='' ">
+	             tr.type=#{type}
+	         </if>
+	     </where>
+	     order by 
+	     	tr.create_time desc 
+	    <if test="length != null  and length!='' and length != -1">
+		    limit #{start},#{length}
+		</if> 
+    </select>
 
-<!-- 根据account查找当前用户 -->
-<select id="getAdmin" parameterType="string" resultType="com.mcfish.entity.common.Admin">
-		select
-			* 
-		from 
-			tb_admin
-		where
-			account = #{account}
-</select>
 
-<!-- 根据id更改文件 -->
-<update id="updataDocById" parameterType="pd">
-	update 
-	    tb_admin_rule 
-	<set>
-		type=#{type},
-		title=#{title},
-		creator=#{creator},
-		content=#{content}
-	</set>
-	where 
-		id =#{id}
-</update>
+    <!-- 根据id查找文件 -->
+    <select id="getDocMesByid" parameterType="int" resultType="com.mcfish.entity.common.DocMessage">
+         select
+			ta.name,tr.*, 
+			(
+			    select
+				    count(id)
+			    from
+				    tb_admin_rule
+		     )as total
+	     from
+		    tb_admin_rule as tr 
+		    inner join tb_admin as ta on tr.admin_id = ta.id
+	     where 
+	       tr.id=#{id}
+    </select>   
+
+	<!-- 新增文件 -->
+	<insert id="addDocument">
+		insert 
+		    into 
+		tb_admin_rule
+			(admin_id,type,title,creator,content) 
+		values
+			(#{roleid},#{type},#{title},#{creator},#{content})
+	</insert>
+
+
+	<!-- 根据id查找文件 -->
+	<select id="getDocById" parameterType="int" resultType="com.mcfish.entity.common.Document">
+			select
+				* 
+			from 
+				tb_admin_rule
+			where
+				id = #{id}
+	</select>
+
+
+	<!-- 根据account查找当前用户 -->
+	<select id="getAdmin" parameterType="string" resultType="com.mcfish.entity.common.Admin">
+			select
+				* 
+			from 
+				tb_admin
+			where
+				account = #{account}
+	</select>
+
+
+	<!-- 根据id更改文件 -->
+	<update id="updataDocById" parameterType="pd">
+		update 
+		    tb_admin_rule 
+		<set>
+			type = #{type},
+			title=#{title},
+			creator=#{creator},
+			content=#{content}
+		</set>
+		where 
+			id =#{id}
+	</update>
 </mapper>

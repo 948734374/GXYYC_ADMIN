@@ -1,6 +1,5 @@
 package com.mcfish.controller.common;
 
-import java.util.List;
 import javax.annotation.Resource;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.RequestMapping;
@@ -8,9 +7,7 @@ import org.springframework.web.bind.annotation.ResponseBody;
 import org.springframework.web.servlet.ModelAndView;
 import com.mcfish.controller.base.BaseController;
 import com.mcfish.controller.base.InterfaceResult;
-import com.mcfish.entity.common.Coupon;
 import com.mcfish.entity.common.Shop;
-import com.mcfish.service.common.ICouponsService;
 import com.mcfish.service.common.IShopService;
 import com.mcfish.util.PageData;
 

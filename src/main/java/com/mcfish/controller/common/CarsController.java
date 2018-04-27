@@ -10,8 +10,6 @@ import javax.servlet.http.HttpServletResponse;
 import org.apache.poi.hssf.usermodel.HSSFWorkbook;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RequestMethod;
-import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.ResponseBody;
 import org.springframework.web.servlet.ModelAndView;
 
@@ -19,7 +17,6 @@ import com.mcfish.controller.base.BaseController;
 import com.mcfish.controller.base.InterfaceResult;
 import com.mcfish.entity.common.Cars;
 import com.mcfish.entity.common.CarsApply;
-import com.mcfish.entity.common.Coupon;
 import com.mcfish.entity.common.Shop;
 import com.mcfish.service.common.ICarsService;
 import com.mcfish.service.common.IShopService;

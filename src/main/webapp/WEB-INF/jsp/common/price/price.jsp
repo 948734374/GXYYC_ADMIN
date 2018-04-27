@@ -15,47 +15,42 @@
 </head>
 <body class="hold-transition skin-blue sidebar-mini mc_body">
 
-        			<div class="content-wrapper" style="margin-left: 0;">
-				<section class="content no-padding">
-					<div class="box box-default">
-						<div class="box-header" style="line-height: 45px;">
-							<h3 class="box-title text-blue box-header-text">套餐设置</h3>
-							<div class="form-inline" style="margin: 10px 0 0 0;">
-								<div class="form-group">
-									<label class="text-color-999">状态:</label>
-									<select id="documentStatus" class="form-control" onchange="getDocumentList();">
-										<option value="">全部</option>
-										<option value="0">制度</option>
-										<option value="1">通知</option>
-									</select>
-								</div>
-								<div class="form-group pull-right">
-									<button class="btn  btn-info" onclick="openAddPricePage();">新建套餐</button>
-								</div>
+        <div class="content-wrapper" style="margin-left: 0;">
+			<section class="content no-padding">
+				<div class="box box-default">
+				
+					<div class="box-header" style="line-height: 45px;">
+						<h3 class="box-title text-blue box-header-text">套餐设置</h3>
+						<div class="form-inline" style="margin: 10px 0 0 0;">
+							
+							<div class="form-group pull-right">
+								<button class="btn  btn-info" onclick="openAddPricePage();">新建套餐</button>
 							</div>
 						</div>
-						<div class="box-body table-responsive">
-							<table id="pricepageList" class="table table-bordered table-hover">
-								<thead>
-									<tr>
-										<th>套餐名称  </th>
-										<th>1次（元）</th>
-										<th>2次（元）</th>
-										<th>3次（元）</th>
-										<th>4次（元）</th>
-										<th>5次（元）</th>
-										<th>6次（元）</th>
-										<th>备注信息   </th>
-										<th>创建时间   </th>
-										<th>操作</th>
-									</tr>
-								</thead>
-							</table>
-						</div>
 					</div>
-				</section>
-			</div>
+					<div class="box-body table-responsive">
+						<table id="pricepageList" class="table table-bordered table-hover">
+							<thead>
+								<tr>
+									<th>套餐名称  </th>
+									<th>1次（元）</th>
+									<th>2次（元）</th>
+									<th>3次（元）</th>
+									<th>4次（元）</th>
+									<th>5次（元）</th>
+									<th>6次（元）</th>
+									<th>备注信息   </th>
+									<th>创建时间   </th>
+									<th>操作</th>
+								</tr>
+							</thead>
+						</table>
+					</div>
+					
+				</div>
+			</section>
 		</div>
+
 
         <!-- 编辑/添加弹窗 -->
 		<div class="modal fade" id="actionPriceView" tabindex="-1" role="dialog" aria-labelledby="mySmallModalLabel" aria-hidden="true">
@@ -74,6 +69,7 @@
 								<span class="text-color-999">套餐名称</span>
 								<input id="actionPriceName" class="form-control" placeholder="请输入套餐名称">
 							</div>
+							<div id="prices">
 							<div class="inputs">
 								<span class="text-color-999">1次（元）</span>
 								<input id="actionPrice1" class="form-control" placeholder="请输入1次的价格">
@@ -98,6 +94,7 @@
 								<span class="text-color-999">6次（元）</span>
 								<input id="actionPrice6" class="form-control" placeholder="请输入6次的价格">
 							</div>
+							</div>
 							<div class="inputs">
 								<span class="text-color-999">备注信息</span>
 								<input id="actioncomment" class="form-control" placeholder="请输入备注信息">
@@ -120,6 +117,6 @@
 		<script src="../dist/jquery/jquery.dataTables.js"></script>
 		<script src="../dist/jquery/ui.js"></script>
 		<script src="../mcfish/js/mcfish.js"></script>
-		<script src="../mcfish/js/pricepage/pricepage.js"></script>
+		<script src="../mcfish/js/price/price.js"></script>
 </body>
 </html>

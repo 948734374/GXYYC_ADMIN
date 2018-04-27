@@ -1,14 +1,13 @@
 package com.mcfish.entity.common;
 
 import java.sql.Timestamp;
-/**
- * 价格策略实体类
- * @author ZengWeihan
- * @date 2018年4月27日 上午11:21:08 
- * @version 1.0
- */
-public class PricePage {
 
+public class Price{
+
+	/**
+	 * tb_dev_price
+	 */
+	
 	private int id;                  //id
 	private String name;             //价格策略的名称
 	private int price1;              //1次的价格
@@ -20,13 +19,15 @@ public class PricePage {
 	private String comment;          //备注信息
 	private Timestamp create_time;   //添加时间
 	
+	private int total;               //统计数量
+	
 	public int getTotal() {
 		return total;
 	}
 	public void setTotal(int total) {
 		this.total = total;
 	}
-	private int total;               //统计数量
+	             
 	public int getId() {
 		return id;
 	}
@@ -86,12 +87,6 @@ public class PricePage {
 	}
 	public void setCreate_time(Timestamp create_time) {
 		this.create_time = create_time;
-	}
-	@Override
-	public String toString() {
-		return "PricePage [id=" + id + ", name=" + name + ", price1=" + price1 + ", price2=" + price2 + ", price3="
-				+ price3 + ", price4=" + price4 + ", price5=" + price5 + ", price6=" + price6 + ", comment=" + comment
-				+ ", create_time=" + create_time + ", total=" + total + "]";
 	}
 	
 	
