@@ -1,0 +1,301 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+        "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="repairsMapper">
+
+	<!-- 获取车辆报修 -->
+	<select id="getRepairsList" parameterType="pd"
+		resultType="com.mcfish.entity.common.Repairs">
+		select 
+			tde.*,
+			tb.id as dev_id,
+			tb.name as dev_name ,
+			tp.name as shop_name,
+			ta.name as admin_name_repair,
+			ta1.name as admin_name_leader,
+			(
+				select
+					count(*)
+				from
+					tb_dev_error tde
+					left join 
+						tb_dev tb 
+					on 
+						tde.dno = tb.dno
+				<where>
+					<if test="status != null and status != ''">
+					 tde.status = #{status}
+					</if>
+				<if test="keyword != null and keyword != ''">
+					and (
+						tde.dno LIKE CONCAT('%',#{keyword},'%')
+						or tb.id LIKE CONCAT('%',#{keyword},'%')
+					)
+				</if>
+				<if test="startTime != null and startTime != ''">
+					and date_format(tde.create_time,'%Y-%m-%d') &gt; #{startTime}
+				</if>
+				<if test="endTime != null and endTime != ''">
+					and date_format(tde.create_time,'%Y-%m-%d') &lt; #{endTime}
+				</if>
+				</where>
+			) as total
+		from 
+			tb_dev_error tde
+			left join 
+				tb_dev tb 
+			on 
+				tde.dno = tb.dno
+			left join 
+				tb_shop tp 
+			on 
+				tde.shop_id = tp.id
+			left join 
+				tb_admin ta
+			on 
+				tde.admin_id_repair = ta.id
+			left join 
+				tb_admin ta1 
+			on 
+				tde.admin_id_leader =ta1.id
+			<where>
+			<if test="status != null and status != ''">
+			 	tde.status = #{status}
+			</if>
+			<if test="keyword != null and keyword != ''">
+				and (
+				tde.dno LIKE CONCAT('%',#{keyword},'%')
+				or
+				tb.id LIKE
+				CONCAT('%',#{keyword},'%')
+				)
+			</if>
+			<if test="startTime != null and startTime != ''">
+				and date_format(tde.create_time,'%Y-%m-%d') &gt;
+				#{startTime}
+			</if>
+
+			<if test="endTime != null and endTime != ''">
+				and date_format(tde.create_time,'%Y-%m-%d') &lt;
+				#{endTime}
+			</if>
+		</where>
+		<if test="length != null  and length!='' and length != -1">
+		   	 limit #{start},#{length}
+		</if>	
+	</select>
+
+	<!-- 导出报修信息数据 -->
+	<select id="getExportRepairs" parameterType="pd"
+		resultType="Map">
+		select 
+			tde.*,
+			tb.id as dev_id,
+			tb.name as dev_name ,
+			tp.name as
+			shop_name,
+			ta.name as admin_name_repair,
+			ta1.name as admin_name_leader
+		from 
+			tb_dev_error tde
+		left join
+			tb_dev tb
+		on
+			tde.dno = tb.dno
+		left join
+			tb_shop tp
+		on
+			tde.shop_id = tp.id
+		left join
+			tb_admin ta
+		on
+			tde.admin_id_repair = ta.id
+		left join
+			tb_admin ta1
+		on
+			tde.admin_id_leader = ta1.id
+		<if test="length != null  and length!='' and length != -1">
+			limit #{start},#{length}
+		</if>
+	</select>
+
+	<!-- 通过ID得到设备信息 -->
+	<select id="getDevById" parameterType="int" resultType="com.mcfish.entity.common.Cars">
+		select
+			*,
+			tdp.name as price_name
+		from
+			tb_dev td
+		left join
+			tb_dev_price tdp
+		on
+			td.price_id = tdp.id
+		where
+		<if test="_parameter!=null and _parameter!=''">
+			td.id = #{_parameter}
+		</if>
+	</select>
+
+	<!--通过ID获取报修信息-->
+	<select id = "getRepairsById" parameterType="int" resultType="com.mcfish.entity.common.Repairs">
+		select 
+			*
+		from
+			tb_dev_error
+		<where>
+		<if test="_parameter!=null and _parameter!=''">
+			id = #{_parameter}
+		</if>
+		</where>
+	</select>
+
+	<!--修改设备报修信息-->
+	<update id="updateRepairs" parameterType="com.mcfish.entity.common.Repairs">
+		update 
+			tb_dev_error 
+		<trim prefix="set" suffixOverrides=",">
+			<if test="status!=null and status!=''">
+				status=#{status},
+			</if>
+		</trim>
+		<where>
+			id=#{id}
+		</where>
+	</update>
+
+	<!-- 查詢故障统计getFaultStatistics -->
+	<select id = "getFaultStatistics" parameterType="pd" resultType="com.mcfish.entity.common.Repairs">
+		SELECT
+	 		ts.prov AS shop_prov,
+	 		ts.city AS shop_city,
+	 		ts.zone AS shop_zone,
+	 		COUNT(tde.id) as repairs_total,
+	 		max(tde.create_time) as max_time,
+	 		min(tde.create_time) as min_time,
+			(
+				SELECT
+					count(
+					DISTINCT 
+						ts.prov,
+						ts.city,
+						ts.zone
+					)
+				FROM
+					tb_dev_error tde
+				LEFT JOIN 
+					tb_shop ts 
+				ON 
+					tde.shop_id = ts.id
+				<where>
+					<if test= "province != null and province !='' ">
+						and ts.prov = '${province}'
+						<if test= "city != null and city !='' ">
+							and ts.city = '${city}'
+							<if test= "zone != null and zone !='' ">
+								and ts.zone = '${zone}'
+							</if>
+						</if>
+					</if>
+					<if test="startTime != null and startTime != ''">
+						and date_format(tde.create_time,'%Y-%m-%d') &gt; #{startTime}
+					</if>
+		
+					<if test="endTime != null and endTime != ''">
+						and date_format(tde.create_time,'%Y-%m-%d') &lt; #{endTime}
+					</if>
+					
+					<if test="keyword != null and keyword != ''">
+						and (
+						tde.dno LIKE CONCAT('%',#{keyword},'%')
+						or
+						tb.id LIKE
+						CONCAT('%',#{keyword},'%')
+						)
+					</if>
+					
+				</where>
+			) as total
+		FROM
+	 		tb_dev_error tde
+		LEFT JOIN 
+			tb_shop ts 
+		ON 
+			tde.shop_id = ts.id
+		<where>
+			<if test= "province != null and province !='' ">
+				and ts.prov = '${province}'
+				<if test= "city != null and city !='' ">
+					and ts.city = '${city}'
+					<if test= "zone != null and zone !='' ">
+						and ts.zone = '${zone}'
+					</if>
+				</if>
+			</if>
+			<if test="startTime != null and startTime != ''">
+				and date_format(tde.create_time,'%Y-%m-%d') &gt; #{startTime}
+			</if>
+
+			<if test="endTime != null and endTime != ''">
+				and date_format(tde.create_time,'%Y-%m-%d') &lt; #{endTime}
+			</if>
+			
+			<if test="keyword != null and keyword != ''">
+				and (
+				tde.dno LIKE CONCAT('%',#{keyword},'%')
+				or
+				tb.id LIKE
+				CONCAT('%',#{keyword},'%')
+				)
+			</if>
+			
+		</where>
+		GROUP BY
+	 		ts.prov,
+	 		ts.city,
+	 		ts.zone
+		<if test="length != null  and length!='' and length != -1">
+		   	 limit #{start},#{length}
+		</if>	
+	</select>
+
+
+	<!-- 导出设备故障信息 -->
+	<select id="getExportRepairsStatistics" parameterType="pd"
+		resultType="Map">
+		SELECT
+	 		ts.prov AS province,
+	 		ts.city AS city,
+	 		ts.zone AS zone,
+	 		COUNT(tde.id) as repairs_total,
+	 		max(tde.create_time) as max_time,
+	 		min(tde.create_time) as min_time,
+			(
+				SELECT
+					count(
+					DISTINCT 
+						ts.prov,
+						ts.city,
+						ts.zone
+					)
+				FROM
+					tb_dev_error tde
+				LEFT JOIN 
+					tb_shop ts 
+				ON 
+					tde.shop_id = ts.id
+			) as total
+		FROM
+	 		tb_dev_error tde
+		LEFT JOIN 
+			tb_shop ts 
+		ON 
+			tde.shop_id = ts.id
+		GROUP BY
+	 		ts.prov,
+	 		ts.city,
+	 		ts.zone
+		<if test="length != null  and length!='' and length != -1">
+		   	 limit #{start},#{length}
+		</if>	
+	</select>
+</mapper>

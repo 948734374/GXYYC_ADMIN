@@ -1,0 +1,96 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+        "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="agentMapper">
+	
+	<select id="getAgentList" parameterType="pd" resultType="com.mcfish.entity.common.Agent">
+		select
+		*,
+		(
+		select 
+			count(*) 
+		from 
+			tb_shop ts 
+		<where>
+			ts.agent_id = ta.id 
+		</where>
+		) as shop_total,
+		(
+		select
+			count(*)
+		from
+			tb_agent ta1
+		<where>
+			<if test= "province != null and province !='' ">
+				and ta1.prov = '${province}'
+				<if test= "city != null and city !='' ">
+					and ta1.city = '${city}'
+				</if>
+			</if>
+			<if test="keyword != null and keyword != ''">
+				and (
+				ta1.phone LIKE CONCAT('%',#{keyword},'%')
+				or
+				ta1.name LIKE
+				CONCAT('%',#{keyword},'%')
+				)
+			</if>
+		</where>
+		) as total_page
+		from
+		tb_agent ta
+		<where>
+			<if test= "province != null and province !='' ">
+				and ta.prov = '${province}'
+				<if test= "city != null and city !='' ">
+					and ta.city = '${city}'
+				</if>
+			</if>
+			<if test="keyword != null and keyword != ''">
+				and (
+				ta.phone LIKE CONCAT('%',#{keyword},'%')
+				or
+				ta.name LIKE
+				CONCAT('%',#{keyword},'%')
+				)
+			</if>
+		</where>
+	</select>
+	
+	
+	<!-- 新增代理商 -->
+	<insert id="addAgent"
+		parameterType="com.mcfish.entity.common.Agent">
+		insert into
+			tb_agent
+			(
+			name,
+			phone,
+			level,
+			head,
+			money,
+			reward,
+			total,
+			parent_id,
+			proportion,
+			prov,
+			city,
+			password
+			)
+		values
+			(
+			'${name}',
+			'${phone}',
+			'${level}',
+			'${head}',
+			'${money}',
+			'${reward}',
+			'${total}',
+			'${parent_id}',
+			'${proportion}',
+			'${prov}',
+			'${city}',
+			'${password}'
+			)
+	</insert>
+</mapper>
