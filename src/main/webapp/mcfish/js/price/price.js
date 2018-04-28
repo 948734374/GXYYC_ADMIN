@@ -102,20 +102,20 @@ function openEditPricePage(id){
 	$api.asyncRequest("sharePriceController/getPricePage.do","POST",{id:id}).then(function(res){
 		var data = res.data;
 		
-		var price1 = $tools.toMoney(data.price1);
-		var price2 = $tools.toMoney(data.price2);
-		var price3 = $tools.toMoney(data.price3);
-		var price4 = $tools.toMoney(data.price4);
-		var price5 = $tools.toMoney(data.price5);
-		var price6 = $tools.toMoney(data.price6);
+		var price1 = $tools.toMoney(data.price1).replace("￥","");
+		var price2 = $tools.toMoney(data.price2).replace("￥","");
+		var price3 = $tools.toMoney(data.price3).replace("￥","");
+		var price4 = $tools.toMoney(data.price4).replace("￥","");
+		var price5 = $tools.toMoney(data.price5).replace("￥","");
+		var price6 = $tools.toMoney(data.price6).replace("￥","");
 		
 		$("#actionPriceName").val(data.name);
-		$("#actionPrice1").val(price1);
-		$("#actionPrice2").val(price2);
-		$("#actionPrice3").val(price3);
-		$("#actionPrice4").val(price4);
-		$("#actionPrice5").val(price5);
-		$("#actionPrice6").val(price6);
+		$("#actionPrice1").val(price1==0?"":price1);
+		$("#actionPrice2").val(price2==0?"":price2);
+		$("#actionPrice3").val(price3==0?"":price3);
+		$("#actionPrice4").val(price4==0?"":price4);
+		$("#actionPrice5").val(price5==0?"":price5);
+		$("#actionPrice6").val(price6==0?"":price6);
 		$("#actioncomment").val(data.comment);
 		
 		$("#pricepageBoxTitle").html("编辑套餐");
@@ -144,27 +144,25 @@ function openAddPricePage(){
 	
 /**
  * 新增套餐
- * @param {Object} id
+ * @param {Object} 
  */
-function addPricePage(id){
+function addPricePage(){
 
 	var name   = $("#actionPriceName").val();
-	var price1 = $("#actionPrice1").val()*100;
-	var price2 = $("#actionPrice2").val()*100;
-	var price3 = $("#actionPrice3").val()*100;
-	var price4 = $("#actionPrice4").val()*100;
-	var price5 = $("#actionPrice5").val()*100;
-	var price6 = $("#actionPrice6").val()*100;
+	
 	var comment= $("#actioncomment").val();
 
-	var prices =[$("#actionPrice1").val(),
-	             $("#actionPrice2").val(),
-	             $("#actionPrice3").val(),
-	             $("#actionPrice4").val(),
-	             $("#actionPrice5").val(),
-	             $("#actionPrice6").val()];
+	var price1 = $("#actionPrice1").val();
+	var price2 = $("#actionPrice2").val();
+	var price3 = $("#actionPrice3").val();
+	var price4 = $("#actionPrice4").val();
+	var price5 = $("#actionPrice5").val();
+	var price6 = $("#actionPrice6").val();
 	
 	var num=0;
+	
+	var prices =[price1*100,price2*100,price3*100,
+	             price4*100,price5*100,price6*100];
 	
 	for(var i=0;i<6;i++){
 		if(prices[i]==""||prices[i]==null){
@@ -173,20 +171,24 @@ function addPricePage(id){
 		}else{
 		}
 	}
-	    if(num>3){
-		    mizhu.toast("请至少填写三项", 1000);
+	if(num!=3){
+		    mizhu.toast("请任选三项填写", 1000);
 		    return false;
 	}
 	
+	if(name == ""||name == null){
+		   mizhu.toast("请填写套餐名称", 1000);
+		   return false;
+	}    
 	
 	var data = {
 		name	: name,
-		price1	: price1,
-		price2	: price2,
-		price3  : price3,
-		price4  : price4,
-		price5  : price5,
-		price6  : price6,
+		price1	: prices[0],
+		price2	: prices[1],
+		price3  : prices[2],
+		price4  : prices[3],
+		price5  : prices[4],
+		price6  : prices[5],
 		comment : comment
 	}
 	
@@ -205,53 +207,50 @@ function addPricePage(id){
  * @param {Object} id
  */
 function editPricePage(id){
-
-	var name   = $("#actionPriceName").val();
+	var num=0;
+	
+	var name = $("#actionPriceName").val();
 	var price1 = $("#actionPrice1").val();
 	var price2 = $("#actionPrice2").val();
 	var price3 = $("#actionPrice3").val();
 	var price4 = $("#actionPrice4").val();
 	var price5 = $("#actionPrice5").val();
 	var price6 = $("#actionPrice6").val();
-	var comment= $("#actioncomment").val();
-
-	price1=price1.slice(1,price1.length)*100;
-	price2=price2.slice(1,price1.length)*100;
-	price3=price3.slice(1,price1.length)*100;
-	price4=price4.slice(1,price1.length)*100;
-	price5=price5.slice(1,price1.length)*100;
-	price6=price6.slice(1,price1.length)*100;
+	var comment = $("#actioncomment").val();
 	
-	var prices =[$("#actionPrice1").val(),
-	             $("#actionPrice2").val(),
-	             $("#actionPrice3").val(),
-	             $("#actionPrice4").val(),
-	             $("#actionPrice5").val(),
-	             $("#actionPrice6").val()];
-	
-	var num=0;
+	var prices =[price1,price2,price3,
+	             price4,price5,price6];
 	
 	for(var i=0;i<6;i++){
+
 		if(prices[i]==""||prices[i]==null){
 			num++;
 			prices[i]=0;
 		}else{
-		}	
-	}
-	    if(num>3){
-		    mizhu.toast("请至少填写三项", 1000);
+			prices[i] = prices[i]*100;
+		}
+		
+		}
+
+	if(num!=3){
+		    mizhu.toast("请任选三项填写", 1000);
 		    return false;
 	}
 	
-	
+    if(name == ""||name == null){
+		   mizhu.toast("请填写套餐名称", 1000);
+		   return false;
+	}    
+	    
+    
 	var data = {
 		name	: name,
-		price1	: price1,
-		price2	: price2,
-		price3  : price3,
-		price4  : price4,
-		price5  : price5,
-		price6  : price6,
+		price1	: prices[0],
+		price2	: prices[1],
+		price3  : prices[2],
+		price4  : prices[3],
+		price5  : prices[4],
+		price6  : prices[5],
 		comment : comment
 	}
 	
@@ -279,6 +278,23 @@ function deletePricePage(id){
 		});
 	})
 }
+
+
+/**
+ * 判断是否为正数
+ * @param id
+ * @returns
+ *//*
+function isIntNum(val){
+    var regPos = / ^\d+$/; // 非负整数
+    var regNeg = /^\-[1-9][0-9]*$/; // 负整数
+    var a=/^[\d\s]+$/;
+    if(regPos.test(val) || regNeg.test(val)|| a.test(val)){
+        return true;
+    }else{
+        return false;
+    }
+}*/
 
 	
 /**
